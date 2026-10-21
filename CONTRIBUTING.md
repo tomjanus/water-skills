@@ -53,6 +53,22 @@ The `agentskills` command is provided by the `skills-ref` package
 `.github/workflows/validate-skills.sh`. A missing `name` or `description`,
 or a `name` that does not match the directory name, fails CI.
 
+## Evals
+
+Evals are encouraged, not mandatory. When a skill has behaviour worth
+protecting, add cases under `skills/<name>/evals/` and run them against a
+baseline:
+
+```
+python evals/runner.py --skill <name> --all-conditions
+```
+
+The harness grades captured runs and reports the lift of the skill over no
+skill, and can compare two skills on the same cases. It is harness-agnostic and
+adds no required dependencies. See [`evals/README.md`](evals/README.md) and
+the [`skill-eval-writing`](skills/skill-eval-writing/SKILL.md) skill for the
+test-driven pattern.
+
 ## Dependencies and bundled tooling
 
 A skill is a directory of instructions and reference files. Do not add

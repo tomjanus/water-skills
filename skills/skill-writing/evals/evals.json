@@ -1,0 +1,68 @@
+{
+  "skill_name": "skill-writing",
+  "description": "Behavioural evals for the skill-writing skill: does an agent that loads it produce a valid, concise, well-routed skill, and does it trigger at the right time?",
+  "trials": 1,
+  "evals": [
+    {
+      "id": "write-epanet-parser",
+      "label": "Write an EPANET .inp parser skill",
+      "prompt": "Create a skill that parses EPANET .inp files and emits a JSON summary of nodes, links, and demands.",
+      "expected_output": "A new skill directory whose SKILL.md has valid frontmatter, a routing description, a concise procedure under 500 lines, and passes `agentskills validate`.",
+      "expected_skill": "skill-writing",
+      "routing": {
+        "expect": ["skill-writing"]
+      },
+      "assertions": [
+        "file:SKILL.md",
+        "regex:^name:\\s*[a-z0-9-]+$",
+        "script:check_frontmatter.py",
+        "script:check_body.py",
+        "agentskills",
+        "The description states what the skill does and when to use it, not the workflow steps.",
+        "The body omits generic Agent Skills knowledge the agent already has."
+      ]
+    },
+    {
+      "id": "improve-existing-skill",
+      "label": "Improve a poorly written skill without breaking it",
+      "prompt": "The skill in bad-skill/ has a missing description and a bloated, generic body. Rewrite its SKILL.md so it validates and follows the format, keeping the original name and file references.",
+      "expected_output": "A rewritten bad-skill/SKILL.md whose name still matches its directory, with a routing description, a concise procedure, and valid frontmatter.",
+      "expected_skill": "skill-writing",
+      "files": [
+        "bad-skill/SKILL.md"
+      ],
+      "routing": {
+        "expect": ["skill-writing"]
+      },
+      "assertions": [
+        "file:bad-skill/SKILL.md",
+        "regex:^name:\\s*bad-skill\\s*$",
+        "script:check_frontmatter.py",
+        "script:check_body.py"
+      ]
+    },
+    {
+      "id": "route-on-trigger",
+      "label": "Triggers when asked to author a skill",
+      "prompt": "Create a skill that converts WNTR simulation results to CSV.",
+      "expected_output": "The agent loads skill-writing before writing anything, and does not load unrelated skills.",
+      "expected_skill": "skill-writing",
+      "routing": {
+        "expect": ["skill-writing"],
+        "forbid": ["skill-eval-writing"]
+      },
+      "assertions": []
+    },
+    {
+      "id": "no-trigger-unrelated",
+      "label": "Does not trigger on unrelated work",
+      "prompt": "Explain the difference between laminar and turbulent flow in a pipe.",
+      "expected_output": "The agent answers the question directly without loading skill-writing.",
+      "expected_skill": null,
+      "routing": {
+        "forbid": ["skill-writing"]
+      },
+      "assertions": []
+    }
+  ]
+}

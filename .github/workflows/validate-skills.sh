@@ -10,7 +10,7 @@ while IFS= read -r -d '' skill_file; do
   count=$((count + 1))
 done < <(
   find skills -mindepth 2 -name SKILL.md \
-    -type f -print0
+    -type f -not -path "*/evals/*" -print0
 )
 
 if [ "$count" -eq 0 ]; then
@@ -19,3 +19,8 @@ if [ "$count" -eq 0 ]; then
 fi
 
 echo "Validated $count skills."
+
+if [ -f evals/runner.py ]; then
+  echo "Validating eval specs..."
+  python evals/runner.py --validate
+fi

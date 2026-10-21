@@ -116,7 +116,9 @@ paste the complete transcript here
 - How did outcomes change compared to before the change?
 
 <!-- "It works" is not evaluation. Describe the before/after difference
-     you observed across multiple sessions. -->
+     you observed across multiple sessions. If the skill has evals, run them
+     with `python evals/runner.py --skill <name> --all-conditions` and report
+     the lift; if it does not, say why evals were not added. -->
 
 ## Rigor
 

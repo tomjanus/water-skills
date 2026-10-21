@@ -95,8 +95,9 @@ Note: water-skills does not yet ship a bootstrap or install skill. If your integ
 
 Skills are not prose — they are code that shapes agent behaviour. If you modify skill content:
 
-- Use the `skill-writing` skill (`skills/skill-writer`) to develop and test changes
+- Use the `skill-writing` skill (`skills/skill-writing`) to develop and test changes
 - Validate with `agentskills validate ./skills/<name>`
+- Add or update evals under `skills/<name>/evals/` and run them against a baseline. Evals are encouraged, not mandatory; use `skill-eval-writing` to author cases and `skill-evaluation` to run and interpret them
 - Run a representative engineering task with the skill in a real session and report what happened
 - Do not modify carefully-tuned content (frontmatter routing keywords, glossaries, worked examples) without evidence the change is an improvement
 
@@ -110,7 +111,7 @@ agentskills validate ./skills/<name>
 
 The `agentskills` command is provided by the `skills-ref` package (`pip install skills-ref`). CI runs the same check for every `skills/*/SKILL.md` via `.github/workflows/validate-skills.sh`.
 
-There is no behavioural eval harness yet. Validation checks format and naming; it does not check whether a skill produces correct engineering results.
+`agentskills` checks format and naming only. To check whether a skill produces correct engineering results, use the eval harness documented in [`evals/README.md`](evals/README.md). Cases live in `skills/<name>/evals/` and are graded against captured runs by `evals/runner.py`; run `python evals/runner.py --validate` to lint specs. LLM-judged evals are opt-in and never run in CI.
 
 ## Understand the Project Before Contributing
 

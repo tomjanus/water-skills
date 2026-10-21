@@ -1,0 +1,5 @@
+.opencode
+__pycache__/
+*.pyc
+evals/runs/
+evals/reports/
