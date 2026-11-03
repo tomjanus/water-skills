@@ -1,0 +1,31 @@
+{
+  "skill_name": "skill-browser",
+  "description": "Checks local-only skill discovery and evidence-grounded matching.",
+  "trials": 1,
+  "evals": [
+    {
+      "id": "local-skill-match",
+      "label": "Return exact local skill identifiers and paths",
+      "prompt": "Find the repository skill relevant to inspecting WNTR hydraulic simulation results.",
+      "expected_output": "The agent reports relevant local skills by exact frontmatter ID and path, with reasons grounded in their descriptions and scope.",
+      "expected_skill": "skill-browser",
+      "routing": { "expect": ["skill-browser"] },
+      "assertions": [
+        "Each recommended skill has an exact ID and repository-relative path.",
+        "Relevance reasons are based on the skill text rather than popularity."
+      ]
+    },
+    {
+      "id": "no-local-match",
+      "label": "Report when the local collection has no match",
+      "prompt": "Find a repository-local skill that installs a licensed GIS application and automates its desktop UI.",
+      "expected_output": "The agent says no repository-local match was found and does not claim to search external registries or install anything.",
+      "expected_skill": "skill-browser",
+      "routing": { "expect": ["skill-browser"] },
+      "assertions": [
+        "The agent limits discovery to the repository-local skill collection.",
+        "The agent does not install a skill or produce an execution plan."
+      ]
+    }
+  ]
+}

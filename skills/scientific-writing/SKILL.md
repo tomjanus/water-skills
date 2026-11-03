@@ -1,0 +1,44 @@
+---
+name: scientific-writing
+description: Edit and prepare water-engineering research manuscripts for clarity, complete methods and results reporting, citation checking, and reproducibility disclosures. Use when drafting or revising a WDN, hydraulic-modelling, water-quality, resilience, or related engineering paper; route scientific validity and submission decisions to qualified humans.
+---
+
+# Scientific writing for water engineering
+
+Help authors communicate their own research clearly and traceably. This is **content editing and reporting support**, not scientific validation, hydraulic model validation, or proxy peer review. Improve wording and identify missing, conflicting, or unsupported reporting; do not decide whether a method is sound, a model is hydraulically valid, or an interpretation is scientifically correct.
+
+## Workflow
+
+1. **Set the brief.** Establish the requested section or editing level, intended readership, article type, target journal (if known), and its current author instructions. Preserve the author's intended meaning. If a missing fact would change the manuscript, ask a focused question instead of filling it in.
+2. **Inventory the evidence.** Read the supplied manuscript and the actual evidence made available: tables, figures, data descriptions, model/network files, configurations, analysis scripts, logs, and cited sources as relevant. Build a compact claim ledger for substantive statements: manuscript location, supporting artifact or source, and status (`supported by supplied material`, `missing`, `conflicting`, or `not checked`). Do not treat code's capability as evidence that a run occurred or produced a result.
+3. **Edit against the evidence.** Improve organization, precision, definitions, units, and consistency. Keep claims no stronger than the evidence. Preserve numerical values and qualifiers from the source material; when a value or conclusion cannot be traced, do not silently change or strengthen it—flag it for author confirmation, including during copyediting. Never manufacture results, experiments, observations, parameters, baselines, statistical tests, or novelty claims.
+4. **Check methods and reporting completeness.** Use the prompts below selectively for the study. Check the target journal's rules and any genuinely applicable reporting checklist; a checklist supports completeness of description, not research design or scientific quality. Do not present a prompt as a universal requirement or prescribe a method the authors did not use.
+5. **Check citations.** Verify each cited work against a publisher, official repository, or trusted bibliographic record such as Crossref. Compare author list, title, year, venue/report type, volume/pages or report number, and DOI/URL where applicable. Confirm that the source actually supports the sentence and distinguish the original method/source from later summaries when possible. Mark records or source claims you could not access as unverified; never fill bibliographic gaps from memory.
+6. **Check reproducibility and disclosure.** Report what is available, restricted, or unavailable, and the conditions for access. Check that software, data/network versions, scenario definitions, and method details match the evidence. Do not promise availability, reproducibility, validation, or licensing the authors have not confirmed.
+7. **Return an auditable edit.** Provide the revised text or requested edits, a short list of material changes, and unresolved author questions grouped by evidence gap, domain-method decision, and human approval. For a final-submission request, give a checklist against the journal's current instructions, but leave submission and final approval to the author team.
+
+## Reporting prompts for authors
+
+These are questions to resolve with the research team, not pass/fail tests or engineering judgments. Include only what is relevant to the manuscript and what the authors can substantiate.
+
+- **Question and contribution:** What question, system boundary, and contribution does the study address? Are aims, methods, reported results, and conclusions aligned? Does the text distinguish the study's claim from broader context or prior work?
+- **Network, data, and observations:** What is the network/model or dataset, its source and version, spatial and temporal coverage, preprocessing, exclusions, and access conditions? Is it measured, synthetic, benchmark, or a combination? Which observations or calibration/validation records were actually used, and how were they separated from other data? Ask authors to resolve choices; do not assess adequacy.
+- **Hydraulic or water-quality model:** Which software, version, engine/backend, model formulation, units, boundary and initial conditions, demand representation/patterns, operating controls, time horizon/steps, and material parameter values are needed to understand the analysis? For water quality, what constituent/reaction assumptions and coefficients are relevant? What solver settings, warnings, or run failures were recorded? Flag missing details; route physical assumptions and solution validity to qualified hydraulic/water-quality experts.
+- **Methods and experiments:** What study design, algorithms, equations, parameter-selection process, scenarios, baselines, objective/constraints, and stopping rules were actually used? For stochastic or ensemble work, what distributions, sample counts, random seeds, and uncertainty summaries were used? For comparisons, what was held constant and how were metrics defined, calculated, aggregated, and unit-labelled? Report statistical procedures and uncertainty only if performed and evidenced.
+- **Results and interpretation:** Can each stated result be located in a supplied output, table, or figure? Are denominators, units, aggregation, uncertainty, and comparison conditions explicit where relevant? Do captions identify the displayed quantity and scenario? Separate observations from explanation and implications. Route disputed interpretation or claims about physical plausibility to the authors and domain reviewers.
+- **Computational reproducibility:** Which code, scripts, configuration, model inputs, dependencies, software versions, and execution environment are needed to understand or rerun the analysis? Are repository releases, commit identifiers, or archived records supplied and accessible? Mention hardware or runtime conditions only when relevant to the reported result. Distinguish a runnable workflow from one actually rerun independently.
+- **Disclosure:** What data/code/network files can be shared, where, under what version/identifier and terms? If restricted (for example, utility-sensitive infrastructure data), what is the actual access route or constraint, and what non-sensitive materials can be shared? Ask authors to confirm funding, conflicts, ethics/security, acknowledgements, and contribution statements under the journal's policy; never infer these or determine authorship.
+
+## Human decision boundary
+
+Describe editorial observations as questions or traceable inconsistencies (for example, “Table 2 reports a different value than this sentence; which is authoritative?”). Do not declare a model validated because it converged, a result plausible because it looks reasonable, or an algorithm correct because its implementation exists. Numerical/code checks may establish only what was run and what the supplied outputs contain; they do not establish hydraulic validity or scientific truth. Route disputed methods, calibration adequacy, physical interpretation, statistical choices, sensitive-data release, authorship, and final submission to the responsible authors and qualified human experts. The author team owns scientific claims and final approval.
+
+## Source leads
+
+Use the current manual for the exact software version reported; manuals document software behavior, not whether a study used it correctly or whether its results are valid.
+
+- [EPANET 2.2 User Manual, U.S. EPA Science Inventory](https://cfpub.epa.gov/si/si_public_record_report.cfm?Lab=CESER&dirEntryId=348882) — official report record, EPA/600/R-20/133 (2020); useful for identifying model inputs, analysis options, controls, and reported outputs to ask authors about.
+- [WNTR User Manual, Version 1.0, U.S. EPA Science Inventory](https://cfpub.epa.gov/si/si_public_record_report.cfm?Lab=CESER&dirEntryId=360203) — official report record, EPA/600/B-23/098 (2023); consult when WNTR is part of the reported workflow.
+- [Wilkinson et al., “The FAIR Guiding Principles for scientific data management and stewardship”](https://doi.org/10.1038/sdata.2016.18), *Scientific Data* 3, 160018 (2016) — general data/workflow findability and reuse principles, not a water-engineering reporting mandate.
+
+This skill has **not been behaviorally validated**. Use it as an authoring aid, not evidence that a manuscript, method, model, citation set, or result has passed scientific review.

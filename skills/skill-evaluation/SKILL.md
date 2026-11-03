@@ -1,7 +1,6 @@
 ---
 name: skill-evaluation
-description: Run and interpret skill evaluations, compare two skills or two versions, and decide whether to ship. Use when the user asks to run evals, read eval results, benchmark a skill against a baseline, check for regressions, or compare skills. Triggers on "run evals", "evaluate this skill", "how did it do", "compare skills", "did I break anything", "benchmark".
-license: Apache-2.0
+description: Grade captured skill-evaluation artifacts and interpret per-case results. Use when asked to read or compare completed eval reports or assess regressions; authoring eval specifications belongs to eval-writing.
 metadata:
   author: Tomasz Janus
   version: "1.0.0"
@@ -9,9 +8,9 @@ metadata:
 
 # Evaluating skills
 
-Run a suite, read the report, and turn per-case results into a decision. This is
-the runtime counterpart to [`skill-eval-writing`](../skill-eval-writing/SKILL.md),
-which authors the cases. Both use the runner documented in
+Grade captured eval artifacts, inspect per-case results, and report what the
+evidence supports. This is the interpretation counterpart to
+[`eval-writing`](../eval-writing/SKILL.md), which authors the cases. Both use the runner documented in
 [`evals/README.md`](../../evals/README.md).
 
 ## Run
@@ -23,13 +22,16 @@ python evals/runner.py --skill <name> --compare <other-skill>
 python evals/runner.py --all --write-report
 ```
 
-- `--validate` lints specs; run it first and in CI. It never touches the network.
+- `--validate` lints specs; run it first and in CI. It never touches the network
+  and does not grade behavior.
 - `--all-conditions` grades the `without_skill` baseline and `with_skill`.
 - `--compare` grades another skill's `with_skill` artifacts on the same case ids.
 - `--judge` enables bare-string assertions via `EVAL_JUDGE_CMD`. Off by default.
 
-The runner grades captured artifacts under `evals/runs/`. Capture runs in your own
-harness; the contract is in [`evals/README.md`](../../evals/README.md#capturing-a-run).
+The runner grades captured artifacts under `evals/runs/`; it does not launch an
+agent or capture a run. If the required artifacts are missing, report that no
+behavioral result is available. Capture runs in a separate harness; the contract
+is in [`evals/README.md`](../../evals/README.md#capturing-a-run).
 
 ## Read the report
 
@@ -38,10 +40,10 @@ Each row is a case; each column is a condition. A cell reads
 
 | Signal | Meaning |
 |--------|---------|
-| High lift, high pass rate | The skill works and is worth keeping. |
-| High lift, noisy across trials | Tighten the skill or widen the rubric, then rerun. |
-| Low lift | The case does not exercise the skill, or the skill does not help. |
-| Negative lift | The skill is making things worse. Investigate before shipping. |
+| High lift, high pass rate | The skill helped on these captured cases and conditions; inspect case evidence before generalizing. |
+| High lift, noisy across trials | Check task ambiguity and variance; inspect cases before changing the skill or rubric. |
+| Low lift | The case may not exercise a difference, or no difference was observed; inspect the prompts, captures, and checks. |
+| Negative lift | A regression was observed in these cases; investigate before making a release decision. |
 
 Read per-case failures, not just the aggregate. A single failing check tells you
 what to fix.
@@ -78,16 +80,17 @@ between trials is a signal about the skill, not noise to average away.
 
 ## Decide whether to ship
 
-Ship when:
+Evidence may support a ship recommendation when:
 
-- `with_skill` beats `without_skill` on cases that exercise the skill;
-- routing checks pass for should-fire and negative cases;
+- `with_skill` outperforms `without_skill` on discriminating cases;
+- textual routing-mention checks match expected IDs; this is not proof a host loaded the skill;
 - deterministic checks pass without the judge;
-- the improvement is stable across trials;
+- the observed improvement is stable across the captured trials;
 - you can point to the per-case evidence, not a vibe.
 
-Do not ship on a single green run, on a saturated suite, or on a change to
-behaviour-shaping wording without a before/after comparison.
+These conditions do not establish scientific or engineering validity. A human
+owns the final ship decision. Do not recommend shipping from a single green run,
+a saturated suite, or a behavior-shaping change without a before/after comparison.
 
 ## Report in a PR
 
@@ -99,5 +102,10 @@ per-case delta. "It works" is not evaluation. If you could not measure it, say s
 - `python evals/runner.py --validate` passes.
 - Baseline and skill conditions were captured for the same case ids.
 - At least one case shows positive lift; no case shows a regression you cannot explain.
-- Routing is verified for trigger-sensitive skills.
+- Textual routing-mention checks match expected IDs; host invocation is not inferred from them.
 - The report names the model, harness, and number of trials.
+- The conclusion is limited to the captured tasks, conditions, and trials.
+
+## Evaluation status
+
+The suite specification is checked for structure. No captured agent runs have been graded, so the behavior of this skill has not been evaluated.

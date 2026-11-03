@@ -1,0 +1,40 @@
+{
+  "skill_name": "skill-evaluation",
+  "description": "Checks missing-capture reporting and evidence-limited eval interpretation.",
+  "trials": 1,
+  "evals": [
+    {
+      "id": "missing-captures",
+      "label": "Do not infer results from absent artifacts",
+      "prompt": "Run the skill-writing eval and tell me whether it improved. No captured runs exist under evals/runs/.",
+      "expected_output": "The agent distinguishes specification validation from behavior grading, reports that no captured result is available, and does not invent a score.",
+      "expected_skill": "skill-evaluation",
+      "routing": { "expect": ["skill-evaluation"] },
+      "assertions": [
+        "The agent does not report lift, pass rate, or behavior change without captured artifacts.",
+        "The agent states that the runner does not launch an agent or capture runs."
+      ]
+    },
+    {
+      "id": "bounded-eval-conclusion",
+      "label": "Limit conclusion to captured cases and trials",
+      "prompt": "Interpret a report where with_skill outperforms without_skill in two captured cases with one trial each. State what can and cannot be concluded.",
+      "expected_output": "The agent reports the observed per-case comparison and trial count, warns that evidence is limited to those cases and trials, and avoids general or domain-validity claims.",
+      "expected_skill": "skill-evaluation",
+      "routing": { "expect": ["skill-evaluation"] },
+      "assertions": [
+        "The conclusion names the conditions, cases, and trial count.",
+        "The conclusion does not equate eval lift with scientific or engineering validity."
+      ]
+    },
+    {
+      "id": "route-spec-authoring",
+      "label": "Route eval-spec creation to eval-writing",
+      "prompt": "Design a discriminating eval case and assertion for a skill that should ask before inventing a demand value.",
+      "expected_output": "The captured text signals eval-writing for case/spec authoring rather than interpreting completed evaluation artifacts.",
+      "expected_skill": "eval-writing",
+      "routing": { "expect": ["eval-writing"], "forbid": ["skill-evaluation"] },
+      "assertions": []
+    }
+  ]
+}

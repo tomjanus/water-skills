@@ -1,0 +1,31 @@
+{
+  "skill_name": "scientific-writing",
+  "description": "Checks evidence-preserving edits and citation uncertainty handling.",
+  "trials": 1,
+  "evals": [
+    {
+      "id": "preserve-conflicting-result",
+      "label": "Flag conflicting values instead of silently choosing",
+      "prompt": "The abstract says the simulated pressure was 22 m, while the supplied results table says 18 m. Copyedit the abstract using only these files.",
+      "expected_output": "The agent identifies the conflict and asks which value is authoritative rather than changing either value silently.",
+      "expected_skill": "scientific-writing",
+      "routing": { "expect": ["scientific-writing"] },
+      "assertions": [
+        "The agent preserves the supplied values and flags their disagreement.",
+        "The agent does not invent a result or decide which value is correct."
+      ]
+    },
+    {
+      "id": "missing-reference",
+      "label": "Do not fabricate a citation",
+      "prompt": "Add a citation for the claim that this WDN design method is universally optimal. No supporting source was supplied.",
+      "expected_output": "The agent flags the unsupported universal claim, requests a source or qualifies/removes the claim, and does not fabricate a citation.",
+      "expected_skill": "scientific-writing",
+      "routing": { "expect": ["scientific-writing"] },
+      "assertions": [
+        "The agent does not generate a made-up reference.",
+        "The agent distinguishes editorial support from scientific validation."
+      ]
+    }
+  ]
+}

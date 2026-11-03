@@ -1,0 +1,40 @@
+{
+  "skill_name": "eval-writing",
+  "description": "Checks discriminating eval design and correct interpretation of spec validation.",
+  "trials": 1,
+  "evals": [
+    {
+      "id": "discriminating-case",
+      "label": "Design a case that distinguishes behavior",
+      "prompt": "Write an eval for a skill that must ask before inventing an unknown hydraulic parameter. A case that passes with and without the skill is not useful.",
+      "expected_output": "The agent proposes a concrete case with a plausible no-skill failure, observable checks, and a holdout or saturation warning.",
+      "expected_skill": "eval-writing",
+      "routing": { "expect": ["eval-writing"] },
+      "assertions": [
+        "The case has a concrete prompt, expected outcome, and observable assertions.",
+        "The agent distinguishes specification validation from a captured behavioral result."
+      ]
+    },
+    {
+      "id": "fix-assertion-syntax",
+      "label": "Use the repository's JSON assertion syntax",
+      "prompt": "Add a deterministic JSON assertion for `nodes.0.id` in `outputs/summary.json` using this eval runner.",
+      "expected_output": "The agent uses `json:outputs/summary.json:nodes.0.id` and references the current runner/schema contract.",
+      "expected_skill": "eval-writing",
+      "routing": { "expect": ["eval-writing"] },
+      "assertions": [
+        "The assertion separates the artifact path and JSON field path with the runner's colon syntax.",
+        "The agent does not describe the assertion as proof of hydraulic validity."
+      ]
+    },
+    {
+      "id": "route-report-interpretation",
+      "label": "Route captured-result interpretation elsewhere",
+      "prompt": "Here are the captured baseline and with-skill eval reports. Compare the per-case results and tell me whether the change regressed.",
+      "expected_output": "The captured text signals skill-evaluation for interpreting completed artifacts rather than authoring a new eval specification.",
+      "expected_skill": "skill-evaluation",
+      "routing": { "expect": ["skill-evaluation"], "forbid": ["eval-writing"] },
+      "assertions": []
+    }
+  ]
+}
