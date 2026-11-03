@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import math
 import os
 import re
 import subprocess
@@ -55,6 +56,7 @@ class CaseResult:
     condition: str
     trial: str
     results: list[AssertionResult] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
     def evaluated(self) -> list[AssertionResult]:
@@ -147,6 +149,18 @@ def trial_dirs(artifacts: Path) -> list[Path]:
         key=lambda p: p.name,
     )
     return trials or [artifacts]
+
+
+def load_run_metadata(artifacts: Path) -> dict[str, Any]:
+    """Read optional metadata for report enrichment without affecting grading."""
+    path = artifacts / "metadata.json"
+    if not path.is_file():
+        return {}
+    try:
+        metadata = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return {}
+    return metadata if isinstance(metadata, dict) else {}
 
 
 def text_files(artifacts: Path) -> dict[str, str]:
@@ -327,8 +341,15 @@ def grade_case(
     trial: str,
     evals_dir: Path,
     judge_cmd: str | None,
+    metadata: dict[str, Any] | None = None,
 ) -> CaseResult:
-    result = CaseResult(case["id"], case.get("label", case["id"]), condition, trial)
+    result = CaseResult(
+        case["id"],
+        case.get("label", case["id"]),
+        condition,
+        trial,
+        metadata=metadata or {},
+    )
     routing = case.get("routing")
     if routing is None and case.get("expected_skill"):
         routing = {"expect": [case["expected_skill"]]}
@@ -365,7 +386,15 @@ def run_suite(
             for trial in trial_dirs(path):
                 trial_name = trial.name if trial != path else "trial-1"
                 results.append(
-                    grade_case(case, trial, label, trial_name, evals_dir, judge_cmd)
+                    grade_case(
+                        case,
+                        trial,
+                        label,
+                        trial_name,
+                        evals_dir,
+                        judge_cmd,
+                        load_run_metadata(trial),
+                    )
                 )
     return results
 
@@ -387,6 +416,12 @@ def condition_specs(
 
 
 def summarize(results: list[CaseResult]) -> dict[str, Any]:
+    """Aggregate results and optional run metadata by condition and case.
+
+    Pass variance is the population variance of the observed binary pass/fail
+    outcomes. Condition-level variance pools outcomes across cases; it is
+    descriptive and should not be interpreted as a model-variance estimate.
+    """
     by_condition: dict[str, list[CaseResult]] = {}
     for result in results:
         by_condition.setdefault(result.condition, []).append(result)
@@ -396,13 +431,39 @@ def summarize(results: list[CaseResult]) -> dict[str, Any]:
         passed = sum(1 for r in runs if r.passed)
         checks = sum(r.score for r in runs)
         total = sum(r.total for r in runs)
+        pass_values = [1.0 if result.passed else 0.0 for result in runs]
+        pass_rate = (passed / trials) if trials else 0.0
+        variance = (
+            sum((value - pass_rate) ** 2 for value in pass_values) / trials
+            if trials
+            else None
+        )
+        costs = _numeric_metadata_values(runs, "cost")
+        times = _numeric_metadata_values(runs, "time_seconds")
         summary["conditions"][condition] = {
             "trials": trials,
             "passed": passed,
-            "trial_pass_rate": (passed / trials) if trials else 0.0,
+            "trial_pass_rate": pass_rate,
+            "trial_pass_variance": variance,
             "checks_passed": checks,
             "checks_total": total,
             "check_pass_rate": (checks / total) if total else 0.0,
+            "cost": sum(costs) if costs else None,
+            "time_seconds": sum(times) if times else None,
+            "run_metadata": _unique_metadata(
+                runs,
+                (
+                    "model",
+                    "agent_harness",
+                    "agent_harness_version",
+                    "eval_harness",
+                    "eval_harness_version",
+                    "skill_revision",
+                ),
+            ),
+            "environment": _unique_metadata(
+                runs, ("software_versions", "os_info", "licence_mode")
+            ),
         }
     case_ids: list[str] = []
     for result in results:
@@ -418,14 +479,48 @@ def summarize(results: list[CaseResult]) -> dict[str, Any]:
             passed = sum(1 for r in case_runs if r.passed)
             total_checks = sum(r.total for r in case_runs)
             checks = sum(r.score for r in case_runs)
+            case_rate = passed / len(case_runs)
+            case_variance = sum(
+                ((1.0 if result.passed else 0.0) - case_rate) ** 2
+                for result in case_runs
+            ) / len(case_runs)
             row[condition] = {
                 "passed": passed,
                 "trials": len(case_runs),
+                "trial_pass_rate": case_rate,
+                "trial_pass_variance": case_variance,
                 "checks_passed": checks,
                 "checks_total": total_checks,
             }
         summary["cases"].append(row)
     return summary
+
+
+def _numeric_metadata_values(results: list[CaseResult], field_name: str) -> list[float]:
+    values: list[float] = []
+    for result in results:
+        value = result.metadata.get(field_name)
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            continue
+        number = float(value)
+        if math.isfinite(number) and number >= 0:
+            values.append(number)
+    return values
+
+
+def _unique_metadata(
+    results: list[CaseResult], fields: tuple[str, ...]
+) -> dict[str, list[Any]]:
+    values: dict[str, list[Any]] = {}
+    for field_name in fields:
+        observed: list[Any] = []
+        for result in results:
+            value = result.metadata.get(field_name)
+            if value is not None and value not in observed:
+                observed.append(value)
+        if observed:
+            values[field_name] = observed
+    return values
 
 
 def render_markdown(skill: str, summary: dict[str, Any]) -> str:
@@ -442,15 +537,42 @@ def render_markdown(skill: str, summary: dict[str, Any]) -> str:
                 cells.append("—")
             else:
                 rate = (cell["passed"] / cell["trials"]) if cell["trials"] else 0
-                cells.append(f"{cell['passed']}/{cell['trials']} ({rate:.0%}, {cell['checks_passed']}/{cell['checks_total']} checks)")
+                variance = cell.get("trial_pass_variance")
+                variance_text = (
+                    f", variance {variance:.3f}" if variance is not None else ""
+                )
+                cells.append(
+                    f"{cell['passed']}/{cell['trials']} ({rate:.0%}, "
+                    f"{cell['checks_passed']}/{cell['checks_total']} checks{variance_text})"
+                )
         lines.append(f"| {row['id']} | " + " | ".join(cells) + " |\n")
     lines.append("\n")
     for condition, stats in summary["conditions"].items():
+        variance = stats.get("trial_pass_variance")
+        variance_text = (
+            f"; pooled trial pass variance {variance:.3f}"
+            if variance is not None
+            else ""
+        )
+        cost_text = (
+            f"; total cost {stats['cost']:g}" if stats.get("cost") is not None else ""
+        )
+        time_text = (
+            f"; total time {stats['time_seconds']:g} s"
+            if stats.get("time_seconds") is not None
+            else ""
+        )
         lines.append(
             f"**{condition}**: {stats['passed']}/{stats['trials']} trials passed "
             f"({stats['trial_pass_rate']:.0%}); checks {stats['checks_passed']}/{stats['checks_total']} "
-            f"({stats['check_pass_rate']:.0%})\n"
+            f"({stats['check_pass_rate']:.0%}){variance_text}{cost_text}{time_text}\n"
         )
+        if stats.get("run_metadata"):
+            lines.append(
+                f"  - Run metadata: `{json.dumps(stats['run_metadata'], sort_keys=True)}`\n"
+            )
+        if stats.get("environment"):
+            lines.append(f"  - Environment: `{json.dumps(stats['environment'], sort_keys=True)}`\n")
     if CONDITION_BASELINE in summary["conditions"] and CONDITION_WITH in summary["conditions"]:
         lift = (
             summary["conditions"][CONDITION_WITH]["trial_pass_rate"]
