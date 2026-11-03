@@ -1,0 +1,34 @@
+---
+name: wntr-engineering
+description: Build, modify, simulate, and analyze water-distribution-network models with WNTR. Use for WNTR hydraulic or water-quality workflows, disruption scenarios, resilience/criticality analysis, and explicit design alternatives; native EPANET input parsing belongs to epanet-validation.
+---
+
+# WNTR engineering
+
+Use the official WNTR documentation for the installed release. WNTR builds and modifies EPANET-compatible water-network models, runs hydraulic and (with EpanetSimulator) water-quality simulations, and supports disruption and resilience analysis. Its two hydraulic simulators have different features; choose by the requested analysis and supported model features.
+
+## Workflow
+
+1. **Set the evidence boundary.** Identify the WNTR version, input INP/model file, source and scenario, requested outputs, and whether the task is baseline analysis, disruption, water quality, criticality, or design alternatives. Preserve the original model. This step is complete when inputs and requested deliverables are explicit.
+2. **Inspect the model and units.** Load the supplied INP with `wntr.network.WaterNetworkModel(path)` and inventory nodes/links, controls/rules, demands/patterns, initial statuses, options, duration and time steps. Record any missing boundary or operating data. WNTR represents model inputs and results in SI units; check conversions from the INP unit convention before changing values. This step is complete when topology, operating assumptions, units, and important omissions are listed.
+3. **Choose the simulator.** Use `wntr.sim.EpanetSimulator(wn)` for EPANET-supported hydraulic analysis and water quality. EPANET 2.2 supports demand-driven and pressure-dependent analysis; EPANET 2.00.12 supports demand-driven analysis only. Use `wntr.sim.WNTRSimulator(wn)` for its supported hydraulic features, including its leak model, while noting that it does not simulate water quality and has documented unsupported options (including non-Hazen-Williams headloss and several pump/valve/emitter options). Check the installed release's framework/limitations page against the model before running. This step is complete when the simulator/version and feature fit are recorded.
+4. **Build the scenario or design alternative.** Apply only supplied, requested changes: for example, a specified pipe break/leak, pump outage, demand/supply change, fire flow, contamination input, recovery action, or candidate network modification. Define scenario timing, locations, parameter values, and controls explicitly. Use a separate model instance or reload the baseline for independent cases; when reusing WNTRSimulator models, reset initial values between runs or otherwise restore all changed state. This step is complete when each scenario differs from baseline only by documented inputs.
+5. **Run and capture.** Set the requested duration, hydraulic/quality/rule timesteps, demand model, and other options from supplied requirements. Run `sim.run_sim()` using the selected simulator. Record WNTR and EPANET versions, options, model/scenario identity, warnings/errors, and run status; do not quietly change options or substitute a simulator to bypass a failure. This step is complete when each case has an execution outcome or a clearly reported blocker.
+6. **Analyze the requested outputs.** Inspect `results.node` and `results.link` DataFrames; their time index is in seconds and columns are node/link names. Select the requested time and components, preserve units, and compare cases on matching time horizons and definitions. Typical outputs include node pressure/head/demand and link flowrate/velocity/status. Water-quality `quality` outputs require the compatible EpanetSimulator path. With WNTRSimulator, leak demand is separate from customer demand; total demand is the sum of demand and leak demand. Compute only named metrics and use only thresholds the user or governing specification provides. This step is complete when every reported value is traceable to a result field, time, component/scenario, and unit.
+7. **Return a reproducible comparison.** Provide the changes, scenario definitions, simulator and version, options, run outcome, selected metrics/results, and remaining gaps. For criticality, identify the tested failure set and metric; for design alternatives, compare the stated candidates under common assumptions and leave selection to the user's stated objective/constraints. This step is complete when the comparison can be reproduced from the named inputs and no unsupported acceptance claim is made.
+
+## Scenario and interpretation limits
+
+- WNTR supports model editing and scenario simulation, but its outputs remain conditional on the supplied topology, demands, controls, boundary conditions, physical parameters, and simulator formulation. Convergence or a completed run does not by itself establish calibration, field agreement, or operational validity.
+- Simulator outputs can differ because the engines use different solvers and formulations. Compare like-for-like cases and disclose the selected engine; check documented support rather than assuming every EPANET option behaves identically.
+- Never infer leak location, leak area/coefficient, discharge exponent, demands, roughness, or other physical inputs from an underspecified prompt or from model outputs. Do not invent universal pressure, resilience, water-quality, or design thresholds; use project/regulatory criteria supplied for the task.
+- Do not reuse a mutated scenario as if it were a clean baseline. WNTRSimulator state, controls, and prior edits can carry across runs; reload/clone or explicitly reset the complete state.
+
+## Official sources
+
+- [WNTR documentation](https://usepa.github.io/WNTR/) — consult the release matching the installed package.
+- [Overview](https://usepa.github.io/WNTR/overview.html), [units](https://usepa.github.io/WNTR/units.html), [water-network model](https://usepa.github.io/WNTR/waternetworkmodel.html), and [model I/O](https://usepa.github.io/WNTR/model_io.html).
+- [Software framework and limitations](https://usepa.github.io/WNTR/framework.html), [hydraulic simulation](https://usepa.github.io/WNTR/hydraulics.html), [water-quality simulation](https://usepa.github.io/WNTR/waterquality.html), and [simulation results](https://usepa.github.io/WNTR/resultsobject.html).
+- [Disaster scenarios](https://usepa.github.io/WNTR/disaster_models.html), [criticality analysis](https://usepa.github.io/WNTR/criticality.html), [resilience metrics](https://usepa.github.io/WNTR/resilience.html), and [advanced simulation techniques](https://usepa.github.io/WNTR/advancedsim.html).
+
+**Evaluation status:** The evaluation specification is checked for structure; no WNTR model was run and this skill has not been behaviorally or domain validated.

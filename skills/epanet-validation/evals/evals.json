@@ -1,0 +1,40 @@
+{
+  "skill_name": "epanet-validation",
+  "description": "Checks layer separation and evidence limits when using epanetparser.",
+  "trials": 1,
+  "evals": [
+    {
+      "id": "classify-validation-layer",
+      "label": "Separate parse, static, and simulation findings",
+      "prompt": "The epanetparser report contains an INP parse error, a static warning, and no simulation output. Summarize what was checked and what was not.",
+      "expected_output": "A report that separates the parse failure and static warning, states that no simulation was run, and makes no calibration or field-validity claim.",
+      "expected_skill": "epanet-validation",
+      "routing": { "expect": ["epanet-validation"] },
+      "assertions": [
+        "The report distinguishes structural parsing, static rules, and simulation checks.",
+        "The report does not claim calibration or field validity."
+      ]
+    },
+    {
+      "id": "missing-parser-tool",
+      "label": "Do not claim a check when the tool is unavailable",
+      "prompt": "Validate this EPANET model with epanetparser. The command is not installed in the environment.",
+      "expected_output": "The agent reports the tool is unavailable, asks before installing dependencies, and does not claim the model was checked.",
+      "expected_skill": "epanet-validation",
+      "routing": { "expect": ["epanet-validation"] },
+      "assertions": [
+        "The agent does not claim that parsing or validation occurred.",
+        "The agent asks before installing the external tool or its dependencies."
+      ]
+    },
+    {
+      "id": "route-wntr-analysis",
+      "label": "Route network scenario analysis to WNTR engineering",
+      "prompt": "Use WNTR to compare a baseline and user-specified pump-outage scenario, including pressure and demand results.",
+      "expected_output": "The captured text signals wntr-engineering for model scenario analysis rather than native input parsing/static checks.",
+      "expected_skill": "wntr-engineering",
+      "routing": { "expect": ["wntr-engineering"], "forbid": ["epanet-validation"] },
+      "assertions": []
+    }
+  ]
+}

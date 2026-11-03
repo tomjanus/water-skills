@@ -1,0 +1,31 @@
+{
+  "skill_name": "pywr-engineering",
+  "description": "Checks Pywr workflow boundaries, inputs, and allocation-result interpretation.",
+  "trials": 1,
+  "evals": [
+    {
+      "id": "pywr-output-boundary",
+      "label": "Keep resource-allocation outputs distinct from hydraulics",
+      "prompt": "A Pywr result table reports reservoir release and demand deficit. The user asks what the node pressures were.",
+      "expected_output": "The agent explains that Pywr allocation outputs do not provide WDN pressure and asks for a hydraulic model or pressure results.",
+      "expected_skill": "pywr-engineering",
+      "routing": { "expect": ["pywr-engineering"] },
+      "assertions": [
+        "The response does not infer pipe pressure from resource-allocation flows.",
+        "The response distinguishes the modeled output from a hydraulic result."
+      ]
+    },
+    {
+      "id": "pywr-missing-model-inputs",
+      "label": "Ask for material allocation assumptions",
+      "prompt": "Set up and run a Pywr model for a new supply system. No network, demand series, priorities, solver, or time period were supplied.",
+      "expected_output": "The agent lists material missing model inputs and asks for the information needed before constructing or running the model.",
+      "expected_skill": "pywr-engineering",
+      "routing": { "expect": ["pywr-engineering"] },
+      "assertions": [
+        "The agent does not invent demands, costs, capacities, or priorities.",
+        "The agent asks for the time basis and solver/environment needed for the requested run."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "skill_name": "wntr-engineering",
+  "description": "Checks WNTR simulator selection and controlled WDN scenario comparisons.",
+  "trials": 1,
+  "evals": [
+    {
+      "id": "wntr-simulator-selection",
+      "label": "Select simulator from requested analysis",
+      "prompt": "The task requires a WNTR leak scenario and water-quality outputs. Explain the simulator and capability checks needed before running.",
+      "expected_output": "The agent distinguishes WNTRSimulator leak support from EpanetSimulator water-quality support and identifies the feature conflict rather than claiming one simulator supports both without checking.",
+      "expected_skill": "wntr-engineering",
+      "routing": { "expect": ["wntr-engineering"] },
+      "assertions": [
+        "The response distinguishes simulator capabilities and limitations.",
+        "The response asks the user to choose or split the analysis if the requested capabilities do not coexist."
+      ]
+    },
+    {
+      "id": "wntr-scenario-state",
+      "label": "Keep baseline and scenario runs comparable",
+      "prompt": "Compare a baseline WNTR run with a pump-outage scenario after the same WaterNetworkModel object has already been modified by another scenario.",
+      "expected_output": "The agent warns that model state may carry over and recommends reloading or resetting a clean baseline before comparison.",
+      "expected_skill": "wntr-engineering",
+      "routing": { "expect": ["wntr-engineering"] },
+      "assertions": [
+        "The response requires clean equivalent initial conditions for the comparison.",
+        "The response does not invent pump status, demands, or acceptance thresholds."
+      ]
+    },
+    {
+      "id": "route-native-parser-check",
+      "label": "Route parser-only validation to epanet-validation",
+      "prompt": "Check whether this EPANET INP file has parser/structural errors with epanetparser; do not run a hydraulic scenario.",
+      "expected_output": "The captured text signals epanet-validation for native parser/static checks rather than WNTR analysis/design workflows.",
+      "expected_skill": "epanet-validation",
+      "routing": { "expect": ["epanet-validation"], "forbid": ["wntr-engineering"] },
+      "assertions": []
+    }
+  ]
+}
