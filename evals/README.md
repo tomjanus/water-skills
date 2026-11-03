@@ -51,6 +51,8 @@ Shared infrastructure lives here, in `evals/`:
 evals/
 ├── README.md               # this file
 ├── runner.py               # discover, grade, report
+├── schema.py               # additive V1 run metadata validation
+├── capture/                 # CLI and guided manual capture adapters
 ├── runs/                   # gitignored: captured runs
 └── reports/                # gitignored: generated reports
 ```
@@ -60,14 +62,30 @@ A captured run is stored as:
 ```
 evals/runs/<skill>/<case-id>/<condition>/
 ├── trial-1/                # trials are optional; one dir is enough
-│   ├── outputs/            # artifacts the agent produced
-│   ├── transcript.md       # the captured transcript
-│   └── metadata.json       # model, harness, skill hash, timestamp
+│   ├── outputs/            # artifacts the task produced
+│   ├── state/               # optional exported application/environment state
+│   ├── screenshots/         # optional, redacted diagnostic images
+│   ├── actions.jsonl        # optional action trace
+│   ├── transcript.md        # readable captured transcript
+│   └── metadata.json        # run identity, environment, timing, cost
 └── trial-2/                # repeat for reliability
 ```
 
-`metadata.json` is free-form, but record at least `model`, `harness`, and a
-short `skill_revision` so runs remain comparable over time.
+`evals/schema.py` defines the additive V1 `metadata.json` contract. New captures
+record `schema_version`, `task_id`, `condition`, `trial`, `model`, and
+`timestamp`; optional fields include agent/evaluation harness names and
+versions, `skill_revision`, `software_versions`, `os_info`, `licence_mode`,
+`cost`, and `time_seconds`.
+Unknown fields remain allowed for forward compatibility. The runner uses
+available metadata to enrich reports; missing or malformed metadata does not
+make an otherwise gradeable capture fail.
+
+Both adapters create the run directory, `outputs/`, `state/`, and
+`metadata.json`. The CLI adapter also writes `transcript.md` from stdout/stderr.
+The manual adapter writes a guide; a human adds the transcript and reviewed
+artifacts. Screenshots and `actions.jsonl` are optional and are not produced by
+these adapters. Keep `evals/runs/` out of git except for small, synthetic,
+reviewed fixtures.
 
 ## Conditions
 
@@ -158,20 +176,39 @@ The judge is never required, never bundled, and never runs in CI.
 
 ## Capturing a run
 
-The runner grades artifacts; it does not drive an agent. Capture runs in
-whatever harness you use:
+The runner grades artifacts; it does not launch an agent. The CLI adapter runs
+an explicitly supplied command without a shell and captures its output. The
+manual adapter prepares a directory and guide for a human-run task. Neither
+adapter drives an agent harness, captures an API session, or operates GUI
+software.
 
-1. Create a fresh working directory per trial. Never share state between trials.
-2. Run the case prompt with the chosen condition (no skill, the skill, or the
-   comparator).
-3. Save the produced files under `outputs/`, the transcript as `transcript.md`,
-   and a `metadata.json`.
-4. Place them under `evals/runs/<skill>/<case-id>/<condition>/trial-1/`.
+For each trial, use an isolated directory and the corresponding condition
+(`without_skill`, `with_skill`, or a comparator). Save produced files under
+`outputs/`, exported state under `state/`, a readable transcript, and run
+metadata. Never share mutable state between trials.
 
 Repeat for `trial-2`, `trial-3`, ... when reliability matters. One trial is
 enough while developing the harness; widen to 3–5 trials before trusting a
-score. `pass@k` (any trial passes) is the default reading; a high-variance case
-is a signal to tighten the skill, not to average it away.
+score. `pass@k` (any trial passes) is the default reading. Reports include the
+population variance of binary pass/fail outcomes as a descriptive statistic;
+condition-level variance pools across cases and is not an estimate of model
+variance. Review per-case results and transcripts before drawing conclusions.
+
+## GUI evaluation status: planned
+
+GUI evaluation is **not currently available**. No approved GUI VM, software
+licence, or independently checkable application-export path has been confirmed,
+and no GUI evaluation has been run. Keep GUI support marked planned until those
+requirements are approved and demonstrated.
+
+An eventual GUI trial requires a clean VM snapshot per trial and metadata for
+OS, application version, locale, display configuration, and licence mode. Grade
+exported application state and reports; screenshots and action traces are
+diagnostic only, not correctness evidence. Redact client/network information.
+Do not commit installers, licence keys, proprietary binaries, confidential
+models, or unredacted captures. GUI evaluations must not run in ordinary PR CI;
+if introduced later, use a maintainer-dispatched or explicitly gated workflow
+with resource caps.
 
 ## Pitfalls
 
