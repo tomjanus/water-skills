@@ -83,7 +83,7 @@ of human involvement will be closed without review.
          Let's build a hydraulic model of a small water distribution network and check the node pressures.
 
      A working integration auto-triggers the relevant water-engineering
-     skill (for example `wntr-engineer` or `epanet-validator`) before any
+      skill (for example `wntr-engineering` or `epanet-validation`) before any
      code is written. Paste the complete transcript below.
 
      These are NOT real integrations and PRs that ship them will be closed:
@@ -112,26 +112,28 @@ paste the complete transcript here
 ## Evaluation
 - What was the initial prompt you (or your human partner) used to start
   the session that led to this change?
-- How many eval sessions did you run AFTER making the change?
-- How did outcomes change compared to before the change?
+- If this changes agent behavior, what eval specification covers the change?
+- What captured eval runs did you perform before/after, if any? State the
+  conditions, trial count, and observed per-case differences. If none were run,
+  say why; do not present specification validation as a behavioral result.
 
-<!-- "It works" is not evaluation. Describe the before/after difference
-     you observed across multiple sessions. If the skill has evals, run them
-     with `python evals/runner.py --skill <name> --all-conditions` and report
-     the lift; if it does not, say why evals were not added. -->
+<!-- Behavior-shaping skill changes require a relevant eval specification.
+     Captured behavioral runs are reported when available; the runner grades
+     artifacts and does not launch an agent. Docs-only changes do not require
+     behavioral evals. -->
 
 ## Rigor
 
-- [ ] If this is a skills change: I used the `skill-writing` skill
-      (`skills/skill-writer`) and completed adversarial pressure testing
-      (paste results below)
-- [ ] This change was tested adversarially, not just on the happy path
-- [ ] I did not modify carefully-tuned content (frontmatter routing
-      keywords, glossaries, worked examples) without extensive evals
-      showing the change is an improvement
+- [ ] If this changes a skill, I used `skills/skill-writing/SKILL.md` and completed its self-review checklist.
+- [ ] If this changes skill behavior: I added a relevant eval specification and
+      validated it with `python evals/runner.py --validate`.
+- [ ] I reported any captured before/after eval runs and limitations; if no
+      behavioral run was captured, I state that the behavior remains unvalidated.
+- [ ] If I changed carefully tuned routing, glossary, or worked-example content,
+      I explain how the eval specification covers the affected behavior.
 
-<!-- If you changed wording in skills that shape agent behavior, show your
-     eval methodology and results. These are not prose — they are code. -->
+<!-- Specification validation is not a behavioral result. The eval runner grades
+     captured artifacts; it does not launch an agent. -->
 
 ## Human review
 - [ ] A human has reviewed the COMPLETE proposed diff before submission

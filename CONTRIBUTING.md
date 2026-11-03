@@ -1,92 +1,71 @@
-# Contributing to water-skills
+# Contributing
 
-water-skills is a central collection of agent skills for engineering and
-water engineering. Skills live in `skills/<name>/SKILL.md`, follow the
-Agent Skills format, and are validated by `agentskills` in CI.
+This guide and the [pull request template](.github/PULL_REQUEST_TEMPLATE.md) are the current contribution instructions. The root `AGENTS.md` is not present; do not rely on obsolete copies for repository policy.
 
-This document is the public-facing summary. The full contributor rules live
-in [`AGENTS.md`](AGENTS.md) and the PR template at
-[`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md).
-Read both before submitting.
+## What belongs in water-skills
 
-## What belongs here
+Contributions should help someone perform water-science or water-engineering work, including hydraulic and network modelling, water-resource planning, water quality, transient analysis, leakage, calibration, and scientific communication. A proposal should start from a real problem or a specific failure someone experienced. Generic productivity skills, unrelated software tutorials, and project-specific private configuration belong elsewhere.
 
-water-skills collects engineering and water-engineering skills:
+## Ways to contribute
 
-- hydraulic and network modelling;
-- simulation tools (EPANET, WNTR, pywr);
-- water-quality and transient analysis;
-- leakage and calibration;
-- scientific writing for engineering work.
+| Contribution | Route |
+|---|---|
+| Questions, proposals, or methods discussion | GitHub Discussions |
+| Bug reports and actionable tasks | GitHub Issues |
+| New or revised skills, tooling, and documentation | Pull request |
 
-We do **not** accept generic productivity skills, unrelated software
-tutorials, skills that promote a specific third-party product, or
-configuration that only benefits one project, dataset, team, or private
-workflow. Ask yourself: "Would this help someone doing engineering work?"
-If not, publish it separately.
+The issue forms ask for context and duplicate checks. A no-git proposal-to-draft-PR service is not currently available; contributors can describe a proposal in Discussions or Issues.
 
-## How to propose or contribute a skill
+## Pull request process
 
-1. **Search first.** Check open and closed issues and PRs for existing
-   skills or prior proposals covering the same task. Extend an existing
-   skill rather than creating a duplicate.
-2. **Describe the problem.** A proposal must state the specific problem
-   someone actually experienced — what broke, what failed, and the user
-   experience that motivated it. "It would be cool if..." is not a problem
-   statement.
-3. **Open a PR against `dev`.** `main` is the released branch; active work
-   lands on `dev` first.
-4. **Fill in every section of the PR template.** PRs that leave sections
-   blank, bundle unrelated changes, or show no evidence of human review are
-   closed without review.
+1. Search open and closed issues and pull requests for related work. Extend an existing skill when appropriate.
+2. State the specific problem, the failed or missing behavior, and who it affected. Describe alternatives considered.
+3. Keep a pull request to one related change. Ask before changing a public skill name or path.
+4. Target `dev` for active work. `main` is the released branch.
+5. Complete every applicable section of the PR template, disclose the model/harness and plugins used (or say the work was done by hand), and provide evidence of complete human review.
+6. If a change shapes agent behavior, add a relevant evaluation specification and validate it. Report captured behavioral runs when available; if they were not run, state that plainly. Documentation-only changes do not require behavioral evals.
+7. Do not claim that a skill, model, or scientific method is validated unless the stated validation was actually performed.
 
-## Validation
+## Skill format and resources
 
-Every `skills/<name>/SKILL.md` must pass:
+Every skill lives in `skills/<name>/SKILL.md`; its frontmatter `name` must match the directory. Run:
 
-```
+```bash
 agentskills validate ./skills/<name>
 ```
 
-The `agentskills` command is provided by the `skills-ref` package
-(`pip install skills-ref`). CI runs the same check for every skill via
-`.github/workflows/validate-skills.sh`. A missing `name` or `description`,
-or a `name` that does not match the directory name, fails CI.
+Current IDs follow the preserved directories. Older references to `skill-eval-writing` now mean `eval-writing`, and references to `hydraulic-modelling` for the WNTR skill now mean `wntr-engineering`.
 
-## Evals
+Common optional folders are created only when used:
 
-Evals are encouraged, not mandatory. When a skill has behaviour worth
-protecting, add cases under `skills/<name>/evals/` and run them against a
-baseline:
+- `references/`: supporting procedures, definitions, and source material;
+- `scripts/`: deterministic tools with documented inputs and outputs;
+- `assets/`: templates and task resources;
+- `evals/`: evaluation specifications, fixtures, and assertion scripts;
+- `examples/`: illustrative examples;
+- `models/`: native engineering model files, configurations, and fixtures—not ML weights;
+- `adapters/`: host-specific instructions or integrations.
 
+The repository-wide license is MIT; individual skills do not declare separate license metadata. Do not add authors, reviewers, references, tested-software claims, or provenance values unless they are supported by evidence.
+
+When a provenance record is justified, place `provenance.yaml` in the skill directory and follow [`provenance.schema.json`](provenance.schema.json). The supported simple-YAML form uses `authors` and `method_status` plus optional string lists for `references`, `software_tested`, `reviewers`, and `evidence`. The checker does not accept arbitrary YAML features; keep records to this documented structure.
+
+## Validation and evaluation
+
+Before opening a PR, run the available checks for affected files:
+
+```bash
+agentskills validate ./skills/<name>
+python evals/runner.py --validate
+bash .github/workflows/validate-skills.sh
 ```
-python evals/runner.py --skill <name> --all-conditions
-```
 
-The harness grades captured runs and reports the lift of the skill over no
-skill, and can compare two skills on the same cases. It is harness-agnostic and
-adds no required dependencies. See [`evals/README.md`](evals/README.md) and
-the [`skill-eval-writing`](skills/skill-eval-writing/SKILL.md) skill for the
-test-driven pattern.
+`python evals/runner.py --validate` checks evaluation specifications and referenced files; it does not run an agent or grade behavior. The runner grades captured artifacts. See [`EVALS.md`](EVALS.md) and [`evals/README.md`](evals/README.md) for the distinction and artifact layout.
 
-## Dependencies and bundled tooling
+## Authoring environment and review
 
-A skill is a directory of instructions and reference files. Do not add
-required dependencies on third-party agent frameworks or hosted services.
-If a skill needs external engineering software or Python packages, declare
-them in the `compatibility` frontmatter and document the install command in
-the body — do not vendor or bundle them.
-
-## Disclosure
-
-Every PR and issue must disclose the model, harness, harness version, and all
-installed plugins used to produce the contribution — or state plainly that
-it was written by hand with no agent. We weigh contributions by what produced
-them: content reasoned from documentation is held to a different bar than
-work grounded in a real session. Contributions that hide their authoring
-environment will be closed.
+Disclose the model, agent harness, versions, and installed plugins used to prepare a contribution, or state that it was written by hand. A human must review the complete diff before submission. The contributor remains responsible for factual claims and must route scientific or engineering decisions to qualified domain reviewers.
 
 ## Questions
 
-For usage questions, troubleshooting help, and general discussion, join the
-[water-skills Discord](https://discord.gg/k49cHHrce).
+For questions and community discussion, join the [water-skills Discord](https://discord.gg/k49cHHrce).
