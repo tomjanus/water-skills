@@ -1,0 +1,110 @@
+name: Propose a skill
+description: Propose a new water-engineering skill for the collection. You do not need to know git, Python, or the skill format.
+title: "[Skill] "
+labels: ["proposal", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You do not need to know git, Python, or the skill format.
+        Describe a real problem you have actually encountered. A maintainer
+        will check scope and duplicates, and the bot will create a draft.
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domain
+      description: Pick the closest match. Choose one.
+      options:
+        - hydraulics
+        - network-modelling
+        - water-quality
+        - transients
+        - leakage
+        - calibration
+        - optimisation
+        - scientific-writing
+        - other-or-unsure
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem did you encounter?
+      description: Describe the actual task, what you tried, and what went wrong or took too long.
+      placeholder: |
+        I was calibrating a model and needed to check that the pressure
+        results were physically plausible before adjusting demands. The
+        agent produced a table but did not check for negative pressures
+        or unrealistic velocities.
+    validations:
+      required: true
+
+  - type: textarea
+    id: prompt
+    attributes:
+      label: What did you ask the agent?
+      description: Paste the exact prompt, or the closest version you can remember.
+      render: text
+      placeholder: |
+        Check whether these pressure results are plausible before I use
+        them for calibration.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should the agent have produced?
+      description: Describe the expected output and how you would recognise a correct result.
+      placeholder: |
+        A short validation report listing negative pressures, pressures
+        outside the expected range, and the checks that were performed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: inputs
+    attributes:
+      label: Inputs and data
+      description: What files, formats, units, or network data does the task involve? Do not upload confidential data.
+      placeholder: |
+        EPANET .inp file and a pressure results table. Units are metres
+        and litres per second.
+
+  - type: input
+    id: software
+    attributes:
+      label: Software and version
+      description: Name the software and the version you actually used.
+      placeholder: "EPANET 2.2, WNTR 1.x, or none"
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Manuals, standards, papers, or internal documents that define correct practice. Do not invent citations.
+      placeholder: |
+        EPANET 2.2 User Manual, section on hydraulic results.
+
+  - type: textarea
+    id: transcript
+    attributes:
+      label: Transcript (optional)
+      description: Paste the relevant part of the session. Remove credentials and confidential data. You can also attach it in a follow-up comment.
+      render: text
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before submitting
+      options:
+        - label: This describes a problem I actually encountered, not a hypothetical improvement.
+          required: true
+        - label: I have not included credentials, personal data, or confidential network data.
+          required: true
+        - label: I understand that a domain reviewer must approve the method before it is published.
+          required: true
+        - label: I am willing to answer follow-up questions about the expected result.
+          required: true
