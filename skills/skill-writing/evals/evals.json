@@ -1,13 +1,13 @@
 {
   "skill_name": "skill-writing",
-  "description": "Behavioural evals for the skill-writing skill: does an agent that loads it produce a valid, concise, well-routed skill, and does it trigger at the right time?",
+  "description": "Evaluation specifications for skill-writing output quality and textual routing signals; captures are required for behavioral results.",
   "trials": 1,
   "evals": [
     {
       "id": "write-epanet-parser",
-      "label": "Write an EPANET .inp parser skill",
-      "prompt": "Create a skill that parses EPANET .inp files and emits a JSON summary of nodes, links, and demands.",
-      "expected_output": "A new skill directory whose SKILL.md has valid frontmatter, a routing description, a concise procedure under 500 lines, and passes `agentskills validate`.",
+      "label": "Write an EPANET Parser usage skill",
+      "prompt": "Create a skill that uses epanetparser to inspect EPANET INP files and report parse/static findings without claiming hydraulic validity.",
+      "expected_output": "A new skill directory whose SKILL.md has valid frontmatter, a concise source-grounded procedure, and explicit limits on parser/static checks versus simulation or calibration.",
       "expected_skill": "skill-writing",
       "routing": {
         "expect": ["skill-writing"]
@@ -45,11 +45,11 @@
       "id": "route-on-trigger",
       "label": "Triggers when asked to author a skill",
       "prompt": "Create a skill that converts WNTR simulation results to CSV.",
-      "expected_output": "The agent loads skill-writing before writing anything, and does not load unrelated skills.",
+      "expected_output": "The captured text records skill-writing as the selected authoring skill and does not present unrelated skills as necessary.",
       "expected_skill": "skill-writing",
       "routing": {
         "expect": ["skill-writing"],
-        "forbid": ["skill-eval-writing"]
+        "forbid": ["eval-writing"]
       },
       "assertions": []
     },
@@ -57,7 +57,7 @@
       "id": "no-trigger-unrelated",
       "label": "Does not trigger on unrelated work",
       "prompt": "Explain the difference between laminar and turbulent flow in a pipe.",
-      "expected_output": "The agent answers the question directly without loading skill-writing.",
+      "expected_output": "The captured text answers the question directly without mentioning skill-writing as required.",
       "expected_skill": null,
       "routing": {
         "forbid": ["skill-writing"]

@@ -1,7 +1,6 @@
 ---
 name: skill-writing
-description: Creates, improves, and validates agent skills (SKILL.md files). Use when the user asks to author a new skill, improve an existing skill, or check a skill against the Agent Skills format.
-license: Apache-2.0
+description: Creates, improves, and validates agent skills (SKILL.md and supporting files). Use when the user asks to author a new skill, improve an existing skill, or check a skill against the Agent Skills standard format.
 metadata:
   author: Tomasz Janus
   version: "1.0.0"
@@ -19,9 +18,13 @@ A skill is a directory containing, at minimum, a `SKILL.md` file with metadata (
 skill-name/
 ├── SKILL.md          # Required: metadata + instructions
 ├── scripts/          # Optional: executable code
-├── references/       # Optional: documentation
-├── assets/           # Optional: templates, resources
-└── ...               # Any additional files or directories
+├── references/       # Optional: documentation, specifications and supplementary knowledge
+├── assets/           # Optional: templates, datasets, images and other supporting resources
+├── evals/            # Required for behavior-shaping changes: eval specifications and supporting resources
+├── examples/         # Optional: illustrative inputs, outputs and usage scenarios
+├── models/           # Optional: native engineering model files, configurations and fixtures (not ML weights)
+├── adapters/         # Optional: host-specific instructions, tool integrations and agent delegation configurations
+└── other files       # Keep the documented top-level folder set; request review before adding a new folder type
 ```
 
 # Frontmatter at a glance
@@ -39,16 +42,19 @@ The `SKILL.md` file must contain YAML frontmatter followed by Markdown content. 
 
 See [the skill format reference](references/skill-format.md) for field-by-field constraints, examples, and valid/invalid cases.
 
+The Agent Skills format permits a `license` field, but this repository uses its root MIT license and omits per-skill license metadata.
+
 # Writing a skill
 
-1. **Scope the skill.** Decide the single task the skill enables and the tools it will use. A skill should be a focused capability, not a general topic.
+1. **Scope the skill.** Decide the single task the skill enables, its trigger, tools, and limits. A skill should be a focused capability, not a general topic.
 2. **Check for an existing skill.** Search the target skills directory for a skill that already covers the task. Extend it rather than creating a duplicate.
 3. **Choose a name.** Lowercase letters, numbers, and hyphens only; no leading or trailing hyphen; no consecutive hyphens; must match the parent directory name.
 4. **Write the description.** State what the skill does and when to use it. Include specific keywords that help agents identify relevant tasks. Keep it under 1024 characters.
-5. **Write the body.** Prefer a concise procedure the agent can follow. Include step-by-step instructions, examples of inputs and outputs, and common edge cases. Omit generic knowledge the agent already has.
-6. **Add references only when needed.** Move detailed reference material (field constraints, glossaries, templates) into `references/` and link to it from `SKILL.md`. Keep the main file under 500 lines.
-7. **Validate.** Run the validation command below and fix any reported errors.
-8. **Self-review.** Check the skill against the checklist below.
+5. **Write the body.** Prefer a concise procedure the agent can follow. Include step-by-step instructions, examples of inputs and outputs, and common edge cases. Omit generic knowledge the agent already has. For skills that need to execute significant amount of code, try simplifying code examples by implementing writing tools in `scripts/`.
+6. **Add resources only when needed.** Use `references/` for supporting documents, `scripts/` for deterministic tools, `assets/` for input templates, `evals/` for task/evidence resources, `examples/` for illustration, `models/` for native engineering model files/configurations/fixtures (not ML weights), and `adapters/` for host-specific integration. Create optional directories only when used. Link to references from `SKILL.md` and keep the main file under 500 lines.
+7. **Add evaluation evidence.** For behavior-shaping instructions, define a discriminating eval specification and identify what an actual captured run would need to show. A valid specification is not a behavioral result; report missing captures as unvalidated.
+8. **Validate.** Run the validation command below and fix any reported errors.
+9. **Self-review.** Check the skill against the checklist below.
 
 # Checklist
 
@@ -61,6 +67,8 @@ Before considering a skill complete, confirm:
 - Detailed reference material is in `references/`, not duplicated in `SKILL.md`.
 - `SKILL.md` is under 500 lines.
 - File references are relative and one level deep.
+- Task-specific claims and domain limits are supported by cited sources or supplied evidence.
+- Behavior-shaping changes have a relevant eval specification; do not claim behavioral validation without captured runs.
 - The skill validates with `agentskills validate`.
 
 # Worked examples
@@ -85,11 +93,11 @@ description: Extract PDF text, fill forms, and merge files. Use when handling PD
 
 ```
 ---
-name: hydraulic-modelling
-description: Build, validate, and analyse hydraulic models of water distribution networks.
+name: model-review
+description: Inspect a supplied model, compare its structure with stated requirements, and report gaps. Use when reviewing a model file.
 ---
 
-# Hydraulic modelling
+# Model review
 
 Consult [GLOSSARY.md](GLOSSARY.md) for terminology and conventions.
 
@@ -100,6 +108,14 @@ Consult [GLOSSARY.md](GLOSSARY.md) for terminology and conventions.
 3. Run the requested simulations.
 4. Check results against physical constraints and expected behaviour.
 ```
+
+# Design principles
+
+1. **Minimalism** : Include only the directories and resources necessary for the skill to function effectively.
+2. **Modularity** : Keep instructions, executable code, reference materials, evaluation resources and integration-specific configurations separate.
+3. **Portability** : Keep the core skill independent of any particular agent host or orchestration framework wherever possible.
+4. **Reproducibility** : Provide sufficient evaluation resources and reference fixtures to allow others to test and verify skill behaviour.
+5. **Discoverability** : Use descriptive filenames and document the purpose of non-obvious files and directories.
 
 # Progressive disclosure
 
@@ -122,6 +138,15 @@ Run the extraction script:
 scripts/extract.py
 ```
 
+When only a particular section of a reference is relevant, reference the section heading or anchor only.
+
+```
+See [evaluation criteria](references/evaluation-guide.md#evaluation-criteria)
+for the scoring methodology.
+```
+
+Prefer linking to specific sections when only part of a reference document is relevant. Use descriptive link text that communicates what information the referenced section contains.
+
 Keep file references one level deep from `SKILL.md`. Avoid deeply nested reference chains.
 
 # Validation
@@ -132,12 +157,13 @@ Validate the skill directory after writing:
 agentskills validate ./my-skill
 ```
 
-The `agentskills` command is provided by the `skills-ref` package. If it is not installed:
+The `agentskills` command is provided by the `skills-ref` package. If it is not
+available, report the missing validator and ask before installing dependencies.
 
-```
-pip install skills-ref
-# or
-uv add skills-ref
-```
+This checks that the `SKILL.md` frontmatter is valid and follows naming
+conventions; it does not evaluate the skill's behavior or domain correctness.
 
-This checks that the `SKILL.md` frontmatter is valid and follows all naming conventions.
+## Evaluation status
+
+The four-case eval specification is checked for structure, but no captured runs
+are present here. This skill's behavior has not been evaluated in this checkout.

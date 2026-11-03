@@ -93,6 +93,9 @@ The optional `license` field:
 - Specifies the license applied to the skill
 - Keep it short (either the name of a license or the name of a bundled license file)
 
+This field is part of the general format. In this repository, the root MIT
+license applies to all repository content, so skill frontmatter omits `license`.
+
 **Example:**
 
 ```
@@ -166,30 +169,45 @@ Note that the agent will load this entire file once it decides to activate a ski
 
 ## Optional directories
 
-A skill directory may contain any files and directories beyond the required `SKILL.md`. The conventions below are recommendations for organizing common types of content.
+Every skill requires `SKILL.md`. In this repository, use only the documented
+optional top-level directories below and create one only when it contains a
+resource the skill uses. Additional files may live at the skill root; ask for
+review before introducing a new directory type.
 
 ### `scripts/`
 
-Contains executable code that agents can run. Scripts should:
-
-- Be self-contained or clearly document dependencies
-- Include helpful error messages
-- Handle edge cases gracefully
+Executable deterministic tools used by the skill. Document inputs, outputs,
+dependencies, and failure messages.
 
 ### `references/`
 
-Contains additional documentation that agents can read when needed:
-
-- `REFERENCE.md` - Detailed technical reference
-- `FORMS.md` - Form templates or structured data formats
-- Domain-specific files (`finance.md`, `legal.md`, etc.)
-
-Keep individual reference files focused and small.
+Supporting source material, procedures, constraints, and definitions loaded only
+when the task needs them. Keep files focused and linked from `SKILL.md`.
 
 ### `assets/`
 
-Contains static resources:
+Input templates and static task resources. Do not put confidential or
+proprietary model data in the repository.
 
-- Templates (document templates, configuration templates)
-- Images (diagrams, examples)
-- Data files (lookup tables, schemas)
+### `evals/`
+
+Evaluation specifications, fixtures, and assertion scripts for behavior that
+should be protected. Captured runs and reports are stored outside version
+control unless explicitly approved as small synthetic fixtures.
+For this repository, behavior-shaping changes require a relevant specification;
+docs-only changes do not require behavioral evals.
+
+### `examples/`
+
+Illustrative inputs and outputs. Label synthetic examples and do not present
+them as observed engineering results.
+
+### `models/`
+
+Native engineering model files, configurations, and fixtures used by the skill.
+This directory is not for machine-learning weights.
+
+### `adapters/`
+
+Host-specific instructions or integration files. Keep the core skill usable
+without a particular agent host where possible.
