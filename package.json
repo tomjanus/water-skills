@@ -1,0 +1,14 @@
+{
+  "name": "water-skills-docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "astro build",
+    "dev": "astro dev",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^4.16.0",
+    "@astrojs/starlight": "^0.25.0"
+  }
+}
