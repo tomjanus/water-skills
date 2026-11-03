@@ -8,7 +8,7 @@ with deltas against a baseline or comparator skill.
 Usage:
     python evals/runner.py --skill skill-writing --all-conditions
     python evals/runner.py --all
-    python evals/runner.py --skill skill-writing --compare skill-eval-writing
+    python evals/runner.py --skill skill-writing --compare eval-writing
     python evals/runner.py --validate
 """
 
@@ -201,12 +201,9 @@ def grade_assertion(
             data = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             return AssertionResult(assertion, "json", False, f"invalid JSON: {exc}")
-        value: Any = data
-        for part in field.split("."):
-            if isinstance(value, dict) and part in value:
-                value = value[part]
-            else:
-                return AssertionResult(assertion, "json", False, f"missing field {field}")
+        exists, _ = json_path_value(data, field)
+        if not exists:
+            return AssertionResult(assertion, "json", False, f"missing field {field}")
         return AssertionResult(assertion, "json", True, f"field {field} present")
 
     if assertion.startswith("script:"):
@@ -234,6 +231,27 @@ def grade_assertion(
         return _grade_agentskills(artifacts)
 
     return _grade_judge(case, assertion, combined, judge_cmd)
+
+
+def json_path_value(data: Any, field_path: str) -> tuple[bool, Any]:
+    """Resolve dot-separated object keys and non-negative list indexes."""
+    value = data
+    if not field_path:
+        return False, None
+    for part in field_path.split("."):
+        if isinstance(value, dict) and part in value:
+            value = value[part]
+        elif isinstance(value, list) and part.isascii() and part.isdecimal():
+            try:
+                index = int(part)
+            except ValueError:
+                return False, None
+            if index >= len(value):
+                return False, None
+            value = value[index]
+        else:
+            return False, None
+    return True, value
 
 
 def _grade_agentskills(artifacts: Path) -> AssertionResult:
@@ -320,12 +338,12 @@ def grade_case(
         for expected in routing.get("expect", []):
             found = expected.lower() in combined.lower()
             result.results.append(
-                AssertionResult(f"route:{expected}", "route", found, f"transcript {'mentions' if found else 'does not mention'} {expected}")
+                AssertionResult(f"route:{expected}", "route", found, f"captured text {'mentions' if found else 'does not mention'} {expected}")
             )
         for forbidden in routing.get("forbid", []):
             found = forbidden.lower() in combined.lower()
             result.results.append(
-                AssertionResult(f"route-not:{forbidden}", "route", not found, f"transcript {'mentions' if found else 'does not mention'} {forbidden}")
+                AssertionResult(f"route-not:{forbidden}", "route", not found, f"captured text {'mentions' if found else 'does not mention'} {forbidden}")
             )
     for assertion in case.get("assertions", []):
         result.results.append(grade_assertion(case, assertion, artifacts, evals_dir, judge_cmd))

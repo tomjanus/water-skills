@@ -24,3 +24,18 @@ if [ -f evals/runner.py ]; then
   echo "Validating eval specs..."
   python evals/runner.py --validate
 fi
+
+echo "Checking skill layout..."
+python scripts/check_skill_layout.py
+
+echo "Checking provenance records..."
+python scripts/check_provenance.py
+
+echo "Checking local Markdown links..."
+python scripts/check_links.py
+
+echo "Checking for selected secret patterns..."
+python scripts/check_secrets.py
+
+echo "Running repository-check tests..."
+python -m unittest discover -s tests -v

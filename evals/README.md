@@ -10,8 +10,9 @@ Evals let you answer questions that "it works" cannot:
 - Did a wording change improve or regress behaviour?
 - Did the agent actually invoke the skill?
 
-Evals are **encouraged, not mandatory**. Add them when a skill has behaviour
-worth protecting, and when you have a real failure or a real decision to make.
+Add a relevant eval specification for behavior-shaping skill changes. Docs-only
+changes do not require behavioral evals. A specification describes what to test;
+it is not evidence that the behavior passed.
 
 ## Test-driven design pattern
 
@@ -90,7 +91,7 @@ deterministically in-repo; bare strings need the optional judge.
 |-----------|--------|-------------|
 | `file:<path>` | `<path>` exists under the artifacts dir (or under `outputs/`, or by filename anywhere) | no |
 | `regex:<pattern>` | Pattern matches the transcript or outputs | no |
-| `json:<path>.<field>` | JSON field exists (dot path) | no |
+| `json:<path>:<field>` | JSON field exists (dot-separated object keys and zero-based array indexes) | no |
 | `script:<name>` | `scripts/<name>` exits 0 (receives the artifacts dir) | no |
 | `agentskills` | `agentskills validate` passes on the produced skill | no |
 | *(bare sentence)* | A qualitative property | yes |
@@ -99,20 +100,23 @@ Write assertions as specific, observable statements, not vague ones. Prefer
 "the output contains a YAML block with an `id` field" over "the output is good".
 Split a two-part requirement into two assertions so a half-answer fails.
 
-## Routing checks
+## Textual routing checks
 
-To verify the agent *invoked* the right skill, add a `routing` block. It is
-graded against the transcript, not the output:
+Add a `routing` block to check whether expected skill IDs are mentioned in the
+captured text artifacts:
 
 ```json
 "routing": {
   "expect": ["skill-writing"],
-  "forbid": ["skill-eval-writing"]
+  "forbid": ["eval-writing"]
 }
 ```
 
-Use `expect` for should-fire cases and `forbid` for negative (near-miss)
-cases. A skill that produces good output but never triggers is still a failure.
+Use `expect` for should-fire cases and `forbid` for negative (near-miss) cases.
+The current runner searches recognized text artifacts, including transcripts
+and output files. This is a text-mention check, not proof that an agent host
+loaded or invoked the skill. Use host-provided invocation metadata when actual
+load evidence is needed.
 
 ## Running evals
 
@@ -120,7 +124,7 @@ cases. A skill that produces good output but never triggers is still a failure.
 python evals/runner.py --list
 python evals/runner.py --validate
 python evals/runner.py --skill skill-writing --all-conditions
-python evals/runner.py --skill skill-writing --compare skill-eval-writing
+python evals/runner.py --skill skill-writing --compare eval-writing
 python evals/runner.py --all --write-report
 ```
 
@@ -128,8 +132,10 @@ python evals/runner.py --all --write-report
 directory, required fields and referenced scripts/fixtures exist). It runs in CI
 and never touches the network.
 
-`--all-conditions` grades baseline and skill; add `--compare <skill>` to grade a
-second skill's `with_skill` artifacts on the same case ids. To compare two
+`--validate` checks specifications and referenced scripts/fixtures; it does not
+launch an agent or grade behavior. `--all-conditions` grades captured baseline
+and skill artifacts; add `--compare <skill>` to grade a second skill's
+`with_skill` artifacts on the same case ids. To compare two
 skills, run the target skill's cases with the comparator loaded and save them to
 `evals/runs/<comparator>/<case-id>/with_skill/`.
 
@@ -179,7 +185,7 @@ is a signal to tighten the skill, not to average it away.
 
 ## Writing an eval
 
-Use the [`skill-eval-writing`](../skills/skill-eval-writing/SKILL.md) skill to
+Use the [`eval-writing`](../skills/eval-writing/SKILL.md) skill to
 author and iterate cases. Use the
 [`skill-evaluation`](../skills/skill-evaluation/SKILL.md) skill to run a suite,
 read the report, and decide whether to ship.
