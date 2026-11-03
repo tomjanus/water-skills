@@ -28,6 +28,27 @@ Skill format checks and evaluation-spec checks are not behavioral test results. 
 - Behavior-shaping skill changes need a relevant evaluation specification. State clearly when behavioral captures are unavailable; do not present specification validation as a performance result.
 - Human review is required before submission. No automated pull-request approval or merge process is provided.
 
+## What makes water-skills different
+
+| Dimension | Status | Evidence |
+|---|---|---|
+| Single domain carried deep | supported | `skills/*/SKILL.md` — water science and engineering only |
+| Judgement rather than paraphrase | supported | `MISSION.md`, Lesson 3 — knowledge-delta test, delete test |
+| Evidence rather than popularity | supported | `evals/runner.py`, `EVALS.md` — captured runs, pass@k/pass^k |
+| Labelled method status | supported | `provenance.schema.json`, `GLOSSARY.md` — established/adapted/heuristic/hypothesis |
+| Real engineering software incl. Windows desktop | supported | `epanet-validation`, `wntr-engineering`, `pywr-engineering` |
+| Contribution without git | supported | Stage 2 — `propose-skill.yml`, `water-skills new --from-issue` |
+| One canonical document per fact | supported | `GLOSSARY.md`, skills layout contract |
+| Ramp-on curriculum | planned | `docs/tutorials/` — 8 lessons, two tracks (Stage 3) |
+| Generated catalog | planned | Not yet built; catalog generation is Stage 5 |
+
+Statuses are `supported` (implemented and verified) or `planned` (documented, not yet built). No dimension claims a capability that does not exist.
+
+## Documentation
+
+- [Contributor guides](src/content/docs/guides/) — installation, contribution without git, contribution with git, skill authoring, review & lifecycle, evaluation, repository reference
+- [Ramp-on tutorials](src/content/docs/tutorials/) — 8 lessons, two tracks (Track A: no git, no agent; Track B: engineering and agent)
+
 ## Validation
 
 From the repository root:
