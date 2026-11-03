@@ -14,7 +14,7 @@ Contributions should help someone perform water-science or water-engineering wor
 | Bug reports and actionable tasks | GitHub Issues |
 | New or revised skills, tooling, and documentation | Pull request |
 
-The issue forms ask for context and duplicate checks. A no-git proposal-to-draft-PR service is not currently available; contributors can describe a proposal in Discussions or Issues.
+The issue forms ask for context and duplicate checks. A no-git proposal-to-draft-PR service is available through the authoring runway: use the `Propose a skill` issue form (`.github/ISSUE_TEMPLATE/propose-skill.yml` or `.md`), and a maintainer can scaffold a draft pull request with `water-skills new --from-issue <number>`. Contributors can also describe a proposal in Discussions or Issues.
 
 ## Pull request process
 
