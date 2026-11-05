@@ -25,3 +25,22 @@ jobs:
       - name: Validate skills
         shell: bash
         run: bash .github/workflows/validate-skills.sh
+
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install documentation dependencies
+        run: npm ci
+
+      - name: Build documentation
+        run: npm run build

@@ -7,6 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
+from check_docs_links import check_docs, check_file, route_for_source, route_map
 from check_links import extract_links, resolve_local_target
 from check_provenance import ProvenanceError, parse_provenance, validate_record
 from check_secrets import scan_text
@@ -154,6 +155,93 @@ class MarkdownLinkTests(unittest.TestCase):
             self.assertIsNone(resolve_local_target(source, "https://example.test", root))
             with self.assertRaises(ValueError):
                 resolve_local_target(source, "../../outside.md", root)
+
+
+class DocsLinkTests(unittest.TestCase):
+    def make_docs_tree(self, root: Path) -> Path:
+        docs_root = root / "src" / "content" / "docs"
+        files = {
+            "index.md": "# Home\n",
+            "guides/install.md": "# Install\n",
+            "tutorials/index.md": "# Tutorials\n",
+            "tutorials/01-first/index.md": "# First\n",
+            "tutorials/02-second/index.md": "# Second\n",
+        }
+        for relative, content in files.items():
+            path = docs_root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding="utf-8")
+        return docs_root
+
+    def test_maps_index_and_named_sources_to_directory_routes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            docs_root = self.make_docs_tree(Path(temporary))
+            self.assertEqual(route_for_source(docs_root / "index.md", docs_root), "/")
+            self.assertEqual(
+                route_for_source(docs_root / "guides" / "install.md", docs_root),
+                "/guides/install/",
+            )
+            self.assertEqual(
+                route_for_source(docs_root / "tutorials" / "index.md", docs_root),
+                "/tutorials/",
+            )
+
+    def test_relative_links_are_resolved_as_routes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            docs_root = self.make_docs_tree(Path(temporary))
+            source = docs_root / "tutorials" / "01-first" / "index.md"
+            routes = route_map(docs_root)
+
+            source.write_text("[next](../02-second/)\n", encoding="utf-8")
+            self.assertEqual(check_file(source, docs_root, routes), [])
+
+            source.write_text("[next](./02-second/)\n", encoding="utf-8")
+            errors = check_file(source, docs_root, routes)
+            self.assertEqual(len(errors), 1)
+            self.assertEqual(errors[0].problem, "missing docs route")
+
+    def test_markdown_source_links_are_resolved_from_the_source_tree(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            docs_root = self.make_docs_tree(Path(temporary))
+            source = docs_root / "tutorials" / "index.md"
+            routes = route_map(docs_root)
+
+            source.write_text("[first](01-first/index.md)\n", encoding="utf-8")
+            self.assertEqual(check_file(source, docs_root, routes), [])
+
+            source.write_text("[repo](../../../README.md)\n", encoding="utf-8")
+            errors = check_file(source, docs_root, routes)
+            self.assertEqual(len(errors), 1)
+            self.assertIn("leaves the docs tree", errors[0].problem)
+
+    def test_absolute_routes_may_include_the_site_base(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            docs_root = self.make_docs_tree(Path(temporary))
+            source = docs_root / "tutorials" / "index.md"
+            routes = route_map(docs_root)
+
+            source.write_text(
+                "[base](/water-skills/tutorials/02-second/) [bare](/guides/install/)\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(check_file(source, docs_root, routes), [])
+
+            source.write_text("[missing](/water-skills/tutorials/missing/)\n", encoding="utf-8")
+            errors = check_file(source, docs_root, routes)
+            self.assertEqual(len(errors), 1)
+            self.assertIn("missing docs route", errors[0].problem)
+
+    def test_external_and_fragment_links_are_ignored(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            docs_root = self.make_docs_tree(Path(temporary))
+            source = docs_root / "tutorials" / "index.md"
+            source.write_text(
+                "[web](https://example.test) [anchor](#section)\n", encoding="utf-8"
+            )
+            self.assertEqual(check_file(source, docs_root), [])
+
+    def test_repository_docs_have_no_broken_links(self) -> None:
+        self.assertEqual(check_docs(), [])
 
 
 class JsonAssertionPathTests(unittest.TestCase):

@@ -40,6 +40,9 @@ python scripts/check_staleness.py
 echo "Checking local Markdown links..."
 python scripts/check_links.py
 
+echo "Checking documentation links..."
+python scripts/check_docs_links.py
+
 echo "Checking for selected secret patterns..."
 python scripts/check_secrets.py
 
