@@ -54,7 +54,7 @@ Say whether the method is `established`, `adapted`, `heuristic`, or `hypothesis`
 
 ## Operational path
 
-The [`SKILL_TEMPLATE.md`](../guides/repository-reference.md) shows the required structure:
+The [`SKILL_TEMPLATE.md`](https://github.com/tomjanus/water-skills/blob/main/contributing/SKILL_TEMPLATE.md) shows the required structure:
 
 ```markdown
 ---
@@ -106,5 +106,5 @@ The same Markdown serves a water engineer who has never used git and an agent th
 
 ## Next link
 
-Track A: [Lesson 4 · Propose a skill without git](./04-propose-without-git/)
-Track B: [Lesson 5 · Propose a skill with git](./05-propose-with-git/)
+Track A: [Lesson 4 · Propose a skill without git](../04-propose-without-git/)
+Track B: [Lesson 5 · Propose a skill with git](../05-propose-with-git/)

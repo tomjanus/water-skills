@@ -12,6 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 ROOT_MARKDOWN = (
     "README.md",
     "CONTRIBUTING.md",
+    "RELEASING.md",
+    "CHANGELOG.md",
     "EVALS.md",
     "REPOSITORY_STRUCTURE.md",
     "GLOSSARY.md",

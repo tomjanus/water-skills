@@ -65,4 +65,4 @@ python evals/runner.py --skill <name> --all-conditions
 python evals/runner.py --skill <name> --compare <other-name>
 ```
 
-See [`EVALS.md`](EVALS.md) and [`evals/README.md`](evals/README.md) for the suite schema, artifact layout, and assertion syntax.
+See [`EVALS.md`](https://github.com/tomjanus/water-skills/blob/main/EVALS.md) and [`evals/README.md`](https://github.com/tomjanus/water-skills/blob/main/evals/README.md) for the suite schema, artifact layout, and assertion syntax.

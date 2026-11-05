@@ -20,7 +20,7 @@ If you use git, you can contribute a skill directly without going through the is
    git checkout -b skill/<name> dev
    ```
 
-3. Create `skills/<name>/SKILL.md` (see [`SKILL_TEMPLATE.md`](../guides/repository-reference.md)).
+3. Create `skills/<name>/SKILL.md` (see [`SKILL_TEMPLATE.md`](https://github.com/tomjanus/water-skills/blob/main/contributing/SKILL_TEMPLATE.md)).
 4. Add optional folders (`references/`, `scripts/`, `evals/`, etc.) only when the skill uses them.
 5. Validate:
 
@@ -66,4 +66,4 @@ bash .github/workflows/validate-skills.sh
 
 ## Next link
 
-[Lesson 6 · How we know a skill works](./06-how-we-know-skill-works/)
+[Lesson 6 · How we know a skill works](../06-how-we-know-skill-works/)

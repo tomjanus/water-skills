@@ -11,8 +11,8 @@ You do not need git, GitHub, or agent tooling to propose a skill. Use the **Prop
 
 Go to the repository's **Issues** tab, click **New issue**, and choose **Propose a skill**. The form is available in two variants:
 
-- [`propose-skill.yml`](https://github.com/lepton/water-skills/tree/main/.github/ISSUE_TEMPLATE/propose-skill.yml) — structured form with dropdowns and required fields
-- [`propose-skill.md`](https://github.com/lepton/water-skills/tree/main/.github/ISSUE_TEMPLATE/propose-skill.md) — Markdown variant with the same fields
+- [`propose-skill.yml`](https://github.com/tomjanus/water-skills/blob/main/.github/ISSUE_TEMPLATE/propose-skill.yml) — structured form with dropdowns and required fields
+- [`propose-skill.md`](https://github.com/tomjanus/water-skills/blob/main/.github/ISSUE_TEMPLATE/propose-skill.md) — Markdown variant with the same fields
 
 ## Step 2: Fill in what automation cannot infer
 

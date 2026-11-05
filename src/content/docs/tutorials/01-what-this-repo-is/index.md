@@ -21,20 +21,19 @@ The difference is not the number of skills. It is whether each pass through the 
 
 | Loop | Question it answers | Status in this repository |
 |---|---|---|
-| **Authoring** | How does tacit knowledge become a draft? | Implemented — issue form + `water-skills new --from-issue` |
+| **Authoring** | How does tacit knowledge become a draft? | Implemented — issue form + `water-skills new --from-issue`; no-git pilot not yet run |
 | **Contract** | Is the skill valid and safe? | Implemented — `agentskills validate`, provenance schema, link/secret checks |
 | **Evidence** | Does it change agent behaviour against a baseline? | Partial — eval runner validates specs; captured runs deferred |
-| **Curation** | Is it distinct, provenance-backed, and current? | Planned — generated catalog not yet built |
-| **Distribution** | Can someone install, update, and trust it? | Planned — docs site (this guide) is step one |
+| **Curation** | Is it distinct, provenance-backed, and current? | Implemented — generated catalog and staleness report; provenance gaps remain visible |
+| **Distribution** | Can someone install, update, and trust it? | Implemented — docs site, release policy, and `v0.1.0` release candidate pending approval |
 
-The binding constraint is the authoring runway: a water engineer should be able to go from "I have a useful workflow" to "here is a reviewable draft" without learning git. That path now exists (Stage 2). Evidence and curation follow.
+The binding constraint is the authoring runway: a water engineer should be able to go from "I have a useful workflow" to "here is a reviewable draft" without learning git. That path is implemented (Stage 2), but it has not yet been validated with a real no-git pilot. Evidence and curation continue to improve independently.
 
 ## Operational path
 
-1. Browse [`skills/`](../guides/repository-reference.md) to see existing skills.
-2. Read [`MISSION.md`](../MISSION.md) for the platform mission and constraints.
-3. Read [`GLOSSARY.md`](../GLOSSARY.md) for canonical terms (skill, trial, outcome, provenance, method status).
-4. The [`README.md`](../README.md) is the landing page; it links to guides, tutorials, and contribution entry points.
+1. Browse [`skills/`](https://github.com/tomjanus/water-skills/tree/main/skills) to see existing skills.
+2. Read the [repository README](https://github.com/tomjanus/water-skills/blob/main/README.md) for platform scope and constraints.
+3. Read [`GLOSSARY.md`](https://github.com/tomjanus/water-skills/blob/main/GLOSSARY.md) for canonical terms (skill, trial, outcome, provenance, method status).
 
 ## Self-check
 
@@ -55,4 +54,4 @@ The binding constraint is the authoring runway: a water engineer should be able 
 
 ## Next link
 
-[Lesson 2 · Use a skill](./02-use-a-skill/)
+[Lesson 2 · Use a skill](../02-use-a-skill/)

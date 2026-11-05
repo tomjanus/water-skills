@@ -187,6 +187,16 @@ class CatalogRenderTests(unittest.TestCase):
             self.assertEqual(render_catalog_json(first), render_catalog_json(second))
             self.assertEqual(render_docs(first), render_docs(second))
 
+    def test_docs_links_target_the_released_branch(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            write_skill(root, "foo")
+            docs = render_docs(build_catalog(root))
+            self.assertIn(
+                "https://github.com/tomjanus/water-skills/tree/main/skills/foo", docs
+            )
+            self.assertNotIn("/tree/dev/", docs)
+
     def test_docs_show_alias_mapping(self) -> None:
         provenance = 'authors: ["A"]\nmethod_status: hypothesis\naliases: ["foo-old"]\n'
         with tempfile.TemporaryDirectory() as temporary:

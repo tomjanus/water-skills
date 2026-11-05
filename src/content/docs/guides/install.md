@@ -20,11 +20,11 @@ npm ci
 npm run dev
 ```
 
-Then open `http://localhost:4321`. The build output goes to `dist/` and is published by the [deploy-docs workflow](.github/workflows/deploy-docs.yml).
+Then open `http://localhost:4321`. The build output goes to `dist/` and is published by the [deploy-docs workflow](https://github.com/tomjanus/water-skills/blob/main/.github/workflows/deploy-docs.yml).
 
 ## Load a skill
 
-1. Browse the [`skills/`](https://github.com/lepton/water-skills/tree/main/skills) directory and select a skill.
+1. Browse the [`skills/`](https://github.com/tomjanus/water-skills/tree/main/skills) directory and select a skill.
 2. Read the skill's `SKILL.md` — it states the task scope, required inputs, procedure, and limitations.
 3. Check the skill's required software, inputs, units, and limitations before use.
 4. Load the skill using your agent host's documented method for adding a skill directory.

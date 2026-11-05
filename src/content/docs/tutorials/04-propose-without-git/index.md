@@ -11,14 +11,14 @@ description: Lesson 4 — issue form, triage, draft PR review. Track A only.
 
 ## Plain-language path
 
-You do not need git, GitHub, or agent tooling to propose a skill.
+You do not need git, GitHub, or agent tooling to propose a skill. The no-git runway is designed and implemented, but it has not yet been validated with a real pilot contributor.
 
 ### Step 1: Open the issue form
 
 Go to the repository's **Issues** tab, click **New issue**, and choose **Propose a skill**. Two variants exist:
 
-- [`propose-skill.yml`](../guides/repository-reference.md) — structured form with dropdowns and required fields
-- [`propose-skill.md`](../guides/repository-reference.md) — Markdown variant with the same fields
+- [`propose-skill.yml`](https://github.com/tomjanus/water-skills/blob/main/.github/ISSUE_TEMPLATE/propose-skill.yml) — structured form with dropdowns and required fields
+- [`propose-skill.md`](https://github.com/tomjanus/water-skills/blob/main/.github/ISSUE_TEMPLATE/propose-skill.md) — Markdown variant with the same fields
 
 ### Step 2: Fill in what automation cannot infer
 
@@ -76,4 +76,4 @@ Issue content is treated as untrusted data: read from a file only, never interpo
 
 ## Next link
 
-Track A ends here. You can propose a skill through the issue form. Track B continues with [Lesson 5 · Propose a skill with git](./05-propose-with-git/).
+Track A ends here. You can propose a skill through the issue form. Track B continues with [Lesson 5 · Propose a skill with git](../05-propose-with-git/).

@@ -12,6 +12,8 @@ contributing/                  Contribution checklist and templates
 .github/                       Issue/PR templates and CI validation workflow
 README.md                      Project entry point
 CONTRIBUTING.md                Contribution process and validation policy
+RELEASING.md                   Release policy and human approval gate
+CHANGELOG.md                   Version history and known limitations
 EVALS.md                       Evaluation policy and runner boundary
 GLOSSARY.md                    Canonical repository terminology
 provenance.schema.json         Schema for per-skill provenance records
@@ -23,5 +25,5 @@ Optional skill resources are created only when used: `references/`, `scripts/`,
 [`contributing/SKILL_TEMPLATE.md`](contributing/SKILL_TEMPLATE.md) and
 [`skills/skill-writing/SKILL.md`](skills/skill-writing/SKILL.md) for authoring
 guidance. CI validates Agent Skills metadata, eval specifications, layout,
-provenance records, catalog freshness, local Markdown links, and high-confidence
-secret patterns.
+provenance records, catalog freshness, local Markdown links, documentation links,
+and high-confidence secret patterns. CI also builds the documentation site.

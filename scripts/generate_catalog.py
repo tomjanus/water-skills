@@ -280,7 +280,7 @@ def _short(text: str, limit: int = 120) -> str:
 
 
 def _skill_url(name: str) -> str:
-    return f"{REPOSITORY_URL}/tree/dev/skills/{name}"
+    return f"{REPOSITORY_URL}/tree/main/skills/{name}"
 
 
 def render_docs(catalog: dict[str, Any]) -> str:

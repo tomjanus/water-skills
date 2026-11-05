@@ -11,7 +11,7 @@ description: Lesson 2 — browse skills, read SKILL.md, check inputs and limitat
 
 ## Plain-language path
 
-1. Browse the [`skills/`](../guides/repository-reference.md) directory.
+1. Browse the [`skills/`](https://github.com/tomjanus/water-skills/tree/main/skills) directory.
 2. Open a skill's `SKILL.md`. It states:
    - What the skill does and when to use it (frontmatter `description`)
    - The focused task and workflow
@@ -68,4 +68,4 @@ python evals/runner.py --validate
 
 ## Next link
 
-[Lesson 3 · Write knowledge, not documentation](./03-write-knowledge-not-docs/)
+[Lesson 3 · Write knowledge, not documentation](../03-write-knowledge-not-docs/)

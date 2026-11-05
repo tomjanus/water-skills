@@ -49,7 +49,7 @@ Load depth only when the task needs it:
 
 Say whether the method is `established`, `adapted`, `heuristic`, or `hypothesis`. A heuristic is acceptable when named as one and tested. An unlabelled guess presented as established method is not.
 
-The [provenance schema](provenance.schema.json) governs `provenance.yaml` records: required `authors` and `method_status`, optional string lists for `references`, `software_tested`, `reviewers`, and `evidence`. Do not populate fields without evidence.
+The [provenance schema](https://github.com/tomjanus/water-skills/blob/main/provenance.schema.json) governs `provenance.yaml` records: required `authors` and `method_status`, optional string lists for `references`, `software_tested`, `reviewers`, and `evidence`. Do not populate fields without evidence.
 
 ## Two audiences, one source
 

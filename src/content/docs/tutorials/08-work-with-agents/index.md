@@ -26,7 +26,7 @@ When preparing a contribution with an agent, state:
 
 ## Agent templates
 
-The [`contributing/AGENT_TEMPLATE.md`](../guides/repository-reference.md) defines the subagent contract:
+The [`contributing/AGENT_TEMPLATE.md`](https://github.com/tomjanus/water-skills/blob/main/contributing/AGENT_TEMPLATE.md) defines the subagent contract:
 
 ```yaml
 ---
@@ -44,12 +44,12 @@ Agents have bounded permissions — `edit: ask`, `bash: ask`, `task: deny` by de
 
 ## One canonical source
 
-Skill lists, install commands, versions, evidence badges, and review status come from canonical source data — not hand-maintained tables that drift from reality. Link to [`GLOSSARY.md`](../guides/repository-reference.md) rather than copying definitions.
+Skill lists, install commands, versions, evidence badges, and review status come from canonical source data — not hand-maintained tables that drift from reality. Link to [`GLOSSARY.md`](https://github.com/tomjanus/water-skills/blob/main/GLOSSARY.md) rather than copying definitions.
 
 ## Operational path
 
-1. Read [`CONTRIBUTING.md`](../guides/repository-reference.md) and the [pull request template](.github/PULL_REQUEST_TEMPLATE.md).
-2. Follow [`contributing/CONTRIBUTION_CHECKLIST.md`](../guides/repository-reference.md).
+1. Read [`CONTRIBUTING.md`](https://github.com/tomjanus/water-skills/blob/main/CONTRIBUTING.md) and the [pull request template](https://github.com/tomjanus/water-skills/blob/main/.github/PULL_REQUEST_TEMPLATE.md).
+2. Follow [`contributing/CONTRIBUTION_CHECKLIST.md`](https://github.com/tomjanus/water-skills/blob/main/contributing/CONTRIBUTION_CHECKLIST.md).
 3. Disclose model/harness in the PR.
 4. Validate changed skills and eval specs.
 5. Request human and domain review before submission.
@@ -73,4 +73,4 @@ Skill lists, install commands, versions, evidence badges, and review status come
 
 ## Next link
 
-You have completed the curriculum. Return to the [tutorial index](./) or read the [repository reference](../guides/repository-reference/).
+You have completed the curriculum. Return to the [tutorial index](../) or read the [repository reference](../../guides/repository-reference/).

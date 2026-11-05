@@ -13,15 +13,15 @@ python scripts/generate_catalog.py
 
 | Skill | Summary | Status | Review | Provenance | Eval cases |
 |---|---|---|---|---|---|
-| [`epanet-validation`](https://github.com/tomjanus/water-skills/tree/dev/skills/epanet-validation) | Parse EPANET INP or WNTR JSON inputs and review epanetparser structural/static findings. Use for file-format, model-s... | unknown | not_recorded | not_recorded | 3 |
-| [`eval-writing`](https://github.com/tomjanus/water-skills/tree/dev/skills/eval-writing) | Design and revise evaluation cases and suite specifications for agent skills. Use when asked to write eval prompts, d... | unknown | not_recorded | not_recorded | 3 |
-| [`pywr-engineering`](https://github.com/tomjanus/water-skills/tree/dev/skills/pywr-engineering) | Set up, inspect, modify, run, and analyze Pywr resource-allocation models. Use for Pywr JSON/Python models, scenario... | unknown | not_recorded | not_recorded | 2 |
-| [`scientific-writing`](https://github.com/tomjanus/water-skills/tree/dev/skills/scientific-writing) | Edit and prepare water-engineering research manuscripts for clarity, complete methods and results reporting, citation... | unknown | not_recorded | not_recorded | 2 |
-| [`skill-browser`](https://github.com/tomjanus/water-skills/tree/dev/skills/skill-browser) | Find repository-local water-skills relevant to a task. Use when asked to discover, locate, or choose skills in this r... | unknown | not_recorded | not_recorded | 2 |
-| [`skill-evaluation`](https://github.com/tomjanus/water-skills/tree/dev/skills/skill-evaluation) | Grade captured skill-evaluation artifacts and interpret per-case results. Use when asked to read or compare completed... | unknown | not_recorded | not_recorded | 3 |
-| [`skill-pr`](https://github.com/tomjanus/water-skills/tree/dev/skills/skill-pr) | Draft and preflight one water-skills contribution against the current repository guidance and pull request template.... | unknown | not_recorded | not_recorded | 2 |
-| [`skill-writing`](https://github.com/tomjanus/water-skills/tree/dev/skills/skill-writing) | Creates, improves, and validates agent skills (SKILL.md and supporting files). Use when the user asks to author a new... | unknown | not_recorded | not_recorded | 4 |
-| [`wntr-engineering`](https://github.com/tomjanus/water-skills/tree/dev/skills/wntr-engineering) | Build, modify, simulate, and analyze water-distribution-network models with WNTR. Use for WNTR hydraulic or water-qua... | unknown | not_recorded | not_recorded | 3 |
+| [`epanet-validation`](https://github.com/tomjanus/water-skills/tree/main/skills/epanet-validation) | Parse EPANET INP or WNTR JSON inputs and review epanetparser structural/static findings. Use for file-format, model-s... | unknown | not_recorded | not_recorded | 3 |
+| [`eval-writing`](https://github.com/tomjanus/water-skills/tree/main/skills/eval-writing) | Design and revise evaluation cases and suite specifications for agent skills. Use when asked to write eval prompts, d... | unknown | not_recorded | not_recorded | 3 |
+| [`pywr-engineering`](https://github.com/tomjanus/water-skills/tree/main/skills/pywr-engineering) | Set up, inspect, modify, run, and analyze Pywr resource-allocation models. Use for Pywr JSON/Python models, scenario... | unknown | not_recorded | not_recorded | 2 |
+| [`scientific-writing`](https://github.com/tomjanus/water-skills/tree/main/skills/scientific-writing) | Edit and prepare water-engineering research manuscripts for clarity, complete methods and results reporting, citation... | unknown | not_recorded | not_recorded | 2 |
+| [`skill-browser`](https://github.com/tomjanus/water-skills/tree/main/skills/skill-browser) | Find repository-local water-skills relevant to a task. Use when asked to discover, locate, or choose skills in this r... | unknown | not_recorded | not_recorded | 2 |
+| [`skill-evaluation`](https://github.com/tomjanus/water-skills/tree/main/skills/skill-evaluation) | Grade captured skill-evaluation artifacts and interpret per-case results. Use when asked to read or compare completed... | unknown | not_recorded | not_recorded | 3 |
+| [`skill-pr`](https://github.com/tomjanus/water-skills/tree/main/skills/skill-pr) | Draft and preflight one water-skills contribution against the current repository guidance and pull request template.... | unknown | not_recorded | not_recorded | 2 |
+| [`skill-writing`](https://github.com/tomjanus/water-skills/tree/main/skills/skill-writing) | Creates, improves, and validates agent skills (SKILL.md and supporting files). Use when the user asks to author a new... | unknown | not_recorded | not_recorded | 4 |
+| [`wntr-engineering`](https://github.com/tomjanus/water-skills/tree/main/skills/wntr-engineering) | Build, modify, simulate, and analyze water-distribution-network models with WNTR. Use for WNTR hydraulic or water-qua... | unknown | not_recorded | not_recorded | 3 |
 
 ## Aliases
 

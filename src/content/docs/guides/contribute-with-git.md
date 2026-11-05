@@ -77,6 +77,6 @@ Behavior-shaping skill changes require a relevant evaluation specification under
 
 ## Step 6: Open a pull request
 
-Open a PR against `dev`. Complete every section of the [pull request template](.github/PULL_REQUEST_TEMPLATE.md), disclose the model/harness and plugins used (or say the work was done by hand), and provide evidence of complete human review.
+Open a PR against `dev`. Complete every section of the [pull request template](https://github.com/tomjanus/water-skills/blob/main/.github/PULL_REQUEST_TEMPLATE.md), disclose the model/harness and plugins used (or say the work was done by hand), and provide evidence of complete human review.
 
 A human must review the complete diff before submission. Domain review is required where scientific decisions are involved. No automated pull-request approval or merge is provided.

@@ -17,15 +17,17 @@ contributing/                  Contribution checklist and templates
 .github/                       Issue/PR templates and CI validation workflow
 README.md                      Project entry point
 CONTRIBUTING.md                Contribution process and validation policy
+RELEASING.md                   Release policy and human approval gate
+CHANGELOG.md                   Version history and known limitations
 EVALS.md                       Evaluation policy and runner boundary
 GLOSSARY.md                    Canonical repository terminology
 provenance.schema.json         Schema for per-skill provenance records
 LICENSE                        Repository-wide MIT license
 ```
 
-Optional skill resources are created only when used: `references/`, `scripts/`, `assets/`, `evals/`, `examples/`, `models/`, and `adapters/`. See [`contributing/SKILL_TEMPLATE.md`](contributing/SKILL_TEMPLATE.md) and [`skills/skill-writing/SKILL.md`](skills/skill-writing/SKILL.md) for authoring guidance.
+Optional skill resources are created only when used: `references/`, `scripts/`, `assets/`, `evals/`, `examples/`, `models/`, and `adapters/`. See [`contributing/SKILL_TEMPLATE.md`](https://github.com/tomjanus/water-skills/blob/main/contributing/SKILL_TEMPLATE.md) and [`skills/skill-writing/SKILL.md`](https://github.com/tomjanus/water-skills/blob/main/skills/skill-writing/SKILL.md) for authoring guidance.
 
-CI validates Agent Skills metadata, eval specifications, layout, provenance records, local Markdown links, and high-confidence secret patterns.
+CI validates Agent Skills metadata, eval specifications, layout, provenance records, catalog freshness, local Markdown links, documentation links, and high-confidence secret patterns. It also builds the documentation site.
 
 ## Scripts
 
@@ -33,7 +35,8 @@ CI validates Agent Skills metadata, eval specifications, layout, provenance reco
 |---|---|
 | `scripts/check_skill_layout.py` | Validates skill directory layout and optional folder names |
 | `scripts/check_provenance.py` | Validates provenance.yaml against provenance.schema.json |
-| `scripts/check_links.py` | Validates local Markdown links |
+| `scripts/check_links.py` | Validates local Markdown links in contributor-facing root files and skill directories |
+| `scripts/check_docs_links.py` | Validates Starlight source and route links under `src/content/docs` |
 | `scripts/check_secrets.py` | Scans for high-confidence credential patterns |
 | `scripts/water_skills.py` | Authoring runway CLI: `water-skills new --from-issue <number>` |
 
@@ -43,6 +46,8 @@ CI validates Agent Skills metadata, eval specifications, layout, provenance reco
 agentskills validate ./skills/<name>
 python evals/runner.py --validate
 bash .github/workflows/validate-skills.sh
+npm ci
+npm run build
 ```
 
 ## Contribution templates
@@ -60,7 +65,7 @@ bash .github/workflows/validate-skills.sh
 
 ## Glossary
 
-Canonical terms for skills, evaluations, trials, harnesses, GUI work, provenance, and contribution are in [`GLOSSARY.md`](GLOSSARY.md). Link to it rather than copying definitions.
+Canonical terms for skills, evaluations, trials, harnesses, GUI work, provenance, and contribution are in [`GLOSSARY.md`](https://github.com/tomjanus/water-skills/blob/main/GLOSSARY.md). Link to it rather than copying definitions.
 
 ## Provenance schema
 

@@ -14,6 +14,12 @@ export default defineConfig({
       },
       sidebar: [
         {
+          label: 'Home',
+          items: [
+            { label: 'Overview', link: '/' },
+          ],
+        },
+        {
           label: 'Catalog',
           items: [
             { label: 'Skill catalog', link: '/catalog/' },

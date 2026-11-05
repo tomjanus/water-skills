@@ -14,7 +14,7 @@ Contributions should help someone perform water-science or water-engineering wor
 | Bug reports and actionable tasks | GitHub Issues |
 | New or revised skills, tooling, and documentation | Pull request |
 
-The issue forms ask for context and duplicate checks. A no-git proposal-to-draft-PR service is available through the authoring runway: use the `Propose a skill` issue form (`.github/ISSUE_TEMPLATE/propose-skill.yml` or `.md`), and a maintainer can scaffold a draft pull request with `water-skills new --from-issue <number>`. Contributors can also describe a proposal in Discussions or Issues.
+The issue forms ask for context and duplicate checks. A no-git proposal-to-draft-PR service is available through the authoring runway: use the `Propose a skill` issue form (`.github/ISSUE_TEMPLATE/propose-skill.yml` or `.md`), and a maintainer can scaffold a draft pull request with `water-skills new --from-issue <number>`. The runway is designed and implemented but has not yet been validated with a real no-git pilot. Contributors can also describe a proposal in Discussions or Issues.
 
 ## Pull request process
 
@@ -65,6 +65,14 @@ bash .github/workflows/validate-skills.sh
 ## Authoring environment and review
 
 Disclose the model, agent harness, versions, and installed plugins used to prepare a contribution, or state that it was written by hand. A human must review the complete diff before submission. The contributor remains responsible for factual claims and must route scientific or engineering decisions to qualified domain reviewers.
+
+## Releases
+
+Releases use one repository-wide semantic version and an annotated Git tag. The
+release process, required checks, and maintainer approval gate are documented in
+[`RELEASING.md`](RELEASING.md). Version history is in
+[`CHANGELOG.md`](CHANGELOG.md). Public release, tagging, and deployment require
+explicit maintainer approval; they are never automatic.
 
 ## Questions
 

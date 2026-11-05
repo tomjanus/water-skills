@@ -53,7 +53,7 @@ python evals/runner.py --validate
 bash .github/workflows/validate-skills.sh
 ```
 
-Complete the [pull request template](.github/PULL_REQUEST_TEMPLATE.md), including model/harness disclosure and any applicable eval evidence.
+Complete the [pull request template](https://github.com/tomjanus/water-skills/blob/main/.github/PULL_REQUEST_TEMPLATE.md), including model/harness disclosure and any applicable eval evidence.
 
 ## Self-check
 
@@ -74,4 +74,4 @@ Complete the [pull request template](.github/PULL_REQUEST_TEMPLATE.md), includin
 
 ## Next link
 
-[Lesson 8 · Work with agents in this repository](./08-work-with-agents/)
+[Lesson 8 · Work with agents in this repository](../08-work-with-agents/)

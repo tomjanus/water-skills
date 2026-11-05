@@ -59,7 +59,7 @@ python evals/runner.py --skill <name> --all-conditions
 python evals/runner.py --skill <name> --compare <other-name>
 ```
 
-See [`EVALS.md`](../guides/repository-reference.md) and [`evals/README.md`](../guides/repository-reference.md) for the suite schema, artifact layout, and assertion syntax.
+See [`EVALS.md`](https://github.com/tomjanus/water-skills/blob/main/EVALS.md) and [`evals/README.md`](https://github.com/tomjanus/water-skills/blob/main/evals/README.md) for the suite schema, artifact layout, and assertion syntax.
 
 ## Self-check
 
@@ -80,4 +80,4 @@ See [`EVALS.md`](../guides/repository-reference.md) and [`evals/README.md`](../g
 
 ## Next link
 
-[Lesson 7 · Review and lifecycle](./07-review-and-lifecycle/)
+[Lesson 7 · Review and lifecycle](../07-review-and-lifecycle/)
