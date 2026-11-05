@@ -5,6 +5,8 @@ repository-wide semantic version; see [`RELEASING.md`](RELEASING.md).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-05
+
 ### Added
 
 - No-git authoring runway: proposal issue forms, repository guidance, and the
