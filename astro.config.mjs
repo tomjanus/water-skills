@@ -2,6 +2,8 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
+  site: 'https://tomjanus.github.io',
+  base: '/water-skills',
   integrations: [
     starlight({
       title: 'water-skills',
@@ -44,9 +46,9 @@ export default defineConfig({
           ],
         },
       ],
-      social: {
-        discord: 'https://discord.gg/k49cHHrce',
-      },
+      social: [
+        { icon: 'discord', label: 'Discord', href: 'https://discord.gg/k49cHHrce' },
+      ],
     }),
   ],
 });
