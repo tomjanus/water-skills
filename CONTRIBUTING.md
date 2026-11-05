@@ -1,6 +1,6 @@
 # Contributing
 
-This guide and the [pull request template](.github/PULL_REQUEST_TEMPLATE.md) are the current contribution instructions. The root `AGENTS.md` is not present; do not rely on obsolete copies for repository policy.
+This guide and the [pull request template](.github/PULL_REQUEST_TEMPLATE.md) are the current contribution instructions. The root `AGENTS.md` **is** present and is the authoritative repository policy; do not rely on obsolete copies.
 
 ## What belongs in water-skills
 
