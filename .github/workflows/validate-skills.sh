@@ -31,6 +31,12 @@ python scripts/check_skill_layout.py
 echo "Checking provenance records..."
 python scripts/check_provenance.py
 
+echo "Checking generated catalog..."
+python scripts/generate_catalog.py --check
+
+echo "Checking review staleness..."
+python scripts/check_staleness.py
+
 echo "Checking local Markdown links..."
 python scripts/check_links.py
 

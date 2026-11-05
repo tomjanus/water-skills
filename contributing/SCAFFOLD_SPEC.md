@@ -92,26 +92,27 @@ Generated with explicit nulls so an incomplete record is visible rather than
 silently defaulted:
 
 ```yaml
-schema_version: 1
+authors: ["<Contributor>"]
+method_status: hypothesis   # established | adapted | heuristic | hypothesis
 title: "<Title>"
 summary: "<One sentence for the catalog>"
-version: 0.1.0
-domain:
-  - <taxonomy value>
-software: []
-authors:
-  - name: "<Contributor>"
-    role: author
-method_type: null          # established_method | adapted_method | novel_method
+status: unknown             # publish | finish | archive | duplicate | unknown
 references: []
+software_tested: []
 reviewers: []
-review_status: unreviewed
-last_reviewed: null
+evidence: []
+review_status: not_reviewed # not_reviewed | under_review | reviewed
+aliases: []
 supersedes: []
 superseded_by: null
-aliases: []
-ai_assistance: []
+last_reviewed: null         # ISO date (YYYY-MM-DD) or null
+review_interval_days: 180
 ```
+
+The required fields are `authors` and `method_status`; the remaining fields
+are optional catalog and lifecycle metadata. A `review_status: reviewed`
+record requires at least one `reviewers` entry. Do not populate authors,
+reviewers, references, or evidence without evidence.
 
 ## evals/evals.json
 

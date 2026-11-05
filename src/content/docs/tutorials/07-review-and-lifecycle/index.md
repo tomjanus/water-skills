@@ -39,9 +39,9 @@ A `reviewed` record requires a `reviewers` entry. Do not populate reviewer or ev
 
 ## Lifecycle
 
-Skill directories may be in states: `publish`, `finish`, `archive`, `duplicate`, or `unknown`. These are maintainer decisions applied individually — no skill is archived, renamed, or published without explicit approval.
+Skill directories may be in states: `publish`, `finish`, `archive`, `duplicate`, or `unknown`. These are maintainer decisions applied individually — no skill is archived, renamed, or published without explicit approval. Record the state in `provenance.yaml` as `status`; the catalog reflects it.
 
-Generated catalogs (planned) will reflect review status, provenance, and compatibility from canonical source data — not hand-maintained lists.
+The generated catalog reads `SKILL.md`, `provenance.yaml`, and eval suite metadata. It shows missing provenance as `not_recorded` and lists review dates from `last_reviewed` and `review_interval_days`. CI regenerates it and fails if the checked-in outputs differ. Run `python scripts/check_staleness.py` to see reviews that are due or have no recorded date.
 
 ## Operational path
 

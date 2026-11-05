@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "default_review_interval_days": 180,
+  "skills": [
+    {
+      "name": "epanet-validation",
+      "last_reviewed": null,
+      "review_interval_days": 180,
+      "review_due": null,
+      "review_state": "unknown"
+    },
+    {
+      "name": "eval-writing",
+      "last_reviewed": null,
+      "review_interval_days": 180,
+      "review_due": null,
+      "review_state": "unknown"
+    },
+    {
+      "name": "pywr-engineering",
+      "last_reviewed": null,
+      "review_interval_days": 180,
+      "review_due": null,
+      "review_state": "unknown"
+    },
+    {
+      "name": "scientific-writing",
+      "last_reviewed": null,
+      "review_interval_days": 180,
+      "review_due": null,
+      "review_state": "unknown"
+    },
+    {
+      "name": "skill-browser",
+      "last_reviewed": null,
+      "review_interval_days": 180,
+      "review_due": null,
+      "review_state": "unknown"
+    },
+    {
+      "name": "skill-evaluation",
+      "last_reviewed": null,
+      "review_interval_days": 180,
+      "review_due": null,
+      "review_state": "unknown"
+    },
+    {
+      "name": "skill-pr",
+      "last_reviewed": null,
+      "review_interval_days": 180,
+      "review_due": null,
+      "review_state": "unknown"
+    },
+    {
+      "name": "skill-writing",
+      "last_reviewed": null,
+      "review_interval_days": 180,
+      "review_due": null,
+      "review_state": "unknown"
+    },
+    {
+      "name": "wntr-engineering",
+      "last_reviewed": null,
+      "review_interval_days": 180,
+      "review_due": null,
+      "review_state": "unknown"
+    }
+  ]
+}

@@ -238,11 +238,21 @@ class RenderProvenanceYamlTests(unittest.TestCase):
         self.assertIn("review_status: not_reviewed", output)
         self.assertIn("references: []", output)
         self.assertIn('software_tested: ["EPANET 2.2"]', output)
+        self.assertIn('title: "Check EPANET pressure results."', output)
+        self.assertIn('summary: "Check EPANET pressure results."', output)
+        self.assertIn("status: unknown", output)
+        self.assertIn("aliases: []", output)
+        self.assertIn("supersedes: []", output)
+        self.assertIn("superseded_by: null", output)
+        self.assertIn("last_reviewed: null", output)
+        self.assertIn("review_interval_days: 180", output)
         self.assertNotIn("license:", output)
         # Only schema-valid top-level fields are present.
         valid_fields = {
             "authors", "method_status", "references", "software_tested",
-            "reviewers", "evidence", "review_status",
+            "reviewers", "evidence", "review_status", "title", "summary",
+            "status", "aliases", "supersedes", "superseded_by",
+            "last_reviewed", "review_interval_days",
         }
         for line in output.splitlines():
             stripped = line.strip()

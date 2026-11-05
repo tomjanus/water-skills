@@ -241,17 +241,20 @@ def render_provenance_yaml(skill_name: str, fields: dict[str, str | None]) -> st
 
     Uses method_status: hypothesis (new skill, unverified) and
     review_status: not_reviewed so an incomplete record is visible
-    rather than silently defaulted. Both values pass the provenance
-    validator in check_provenance.py. Fields not in the schema
-    (schema_version, title, version, domain, summary, last_reviewed,
-    supersedes, superseded_by, aliases, ai_assistance) are omitted.
+    rather than silently defaulted. Catalog fields are explicit nulls or
+    empty lists so a missing value is visible rather than inferred.
     """
     author = fields.get("author") or "<contributor>"
     software = fields.get("software") or ""
+    title = (fields.get("problem") or "<Title>").strip()
+    summary = (fields.get("problem") or "<One sentence for the catalog>").strip()
 
     lines: list[str] = []
     lines.append(f'authors: ["{author}"]')
     lines.append("method_status: hypothesis   # new skill, unverified until domain review")
+    lines.append(f'title: "{escape_json(title)}"')
+    lines.append(f'summary: "{escape_json(summary)}"')
+    lines.append("status: unknown")
     lines.append("references: []")
     if software:
         lines.append(f'software_tested: ["{software}"]')
@@ -260,7 +263,11 @@ def render_provenance_yaml(skill_name: str, fields: dict[str, str | None]) -> st
     lines.append("reviewers: []")
     lines.append("evidence: []")
     lines.append("review_status: not_reviewed")
-    return "\n".join(lines) + "\n"
+    lines.append("aliases: []")
+    lines.append("supersedes: []")
+    lines.append("superseded_by: null")
+    lines.append("last_reviewed: null")
+    lines.append("review_interval_days: 180")
     return "\n".join(lines) + "\n"
 
 

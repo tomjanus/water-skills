@@ -12,6 +12,12 @@ export default defineConfig({
       },
       sidebar: [
         {
+          label: 'Catalog',
+          items: [
+            { label: 'Skill catalog', link: '/catalog/' },
+          ],
+        },
+        {
           label: 'Guides',
           items: [
             { label: 'Installation & use', link: '/guides/install/' },
@@ -38,9 +44,9 @@ export default defineConfig({
           ],
         },
       ],
-      social: [
-        { icon: 'discord', label: 'Discord', url: 'https://discord.gg/k49cHHrce' },
-      ],
+      social: {
+        discord: 'https://discord.gg/k49cHHrce',
+      },
     }),
   ],
 });

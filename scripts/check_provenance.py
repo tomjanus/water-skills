@@ -13,11 +13,30 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILLS_DIR = ROOT / "skills"
 SCHEMA_PATH = ROOT / "provenance.schema.json"
 
-LIST_FIELDS = {"authors", "references", "software_tested", "reviewers", "evidence"}
-SCALAR_FIELDS = {"method_status", "review_status"}
+LIST_FIELDS = {
+    "authors",
+    "references",
+    "software_tested",
+    "reviewers",
+    "evidence",
+    "aliases",
+    "supersedes",
+}
+SCALAR_FIELDS = {
+    "method_status",
+    "review_status",
+    "title",
+    "summary",
+    "status",
+    "superseded_by",
+    "last_reviewed",
+    "review_interval_days",
+}
 ALLOWED_FIELDS = LIST_FIELDS | SCALAR_FIELDS
 METHOD_STATUSES = {"established", "adapted", "heuristic", "hypothesis"}
 REVIEW_STATUSES = {"not_reviewed", "under_review", "reviewed"}
+LIFECYCLE_STATUSES = {"publish", "finish", "archive", "duplicate", "unknown"}
+DATE_PATTERN = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
 
 
 class ProvenanceError(ValueError):
@@ -158,6 +177,36 @@ def validate_record(record: dict[str, Any]) -> list[str]:
         errors.append(f"'review_status' must be one of {', '.join(sorted(REVIEW_STATUSES))}")
     if review_status == "reviewed" and not record.get("reviewers"):
         errors.append("'reviewers' is required when review_status is 'reviewed'")
+
+    for field in ("title", "summary"):
+        if field not in record:
+            continue
+        value = record[field]
+        if not isinstance(value, str) or not value.strip():
+            errors.append(f"'{field}' must be a non-empty string")
+
+    status = record.get("status")
+    if "status" in record and (
+        not isinstance(status, str) or status not in LIFECYCLE_STATUSES
+    ):
+        errors.append(f"'status' must be one of {', '.join(sorted(LIFECYCLE_STATUSES))}")
+
+    superseded_by = record.get("superseded_by")
+    if "superseded_by" in record and superseded_by is not None and (
+        not isinstance(superseded_by, str) or not superseded_by.strip()
+    ):
+        errors.append("'superseded_by' must be a non-empty string or null")
+
+    last_reviewed = record.get("last_reviewed")
+    if "last_reviewed" in record and last_reviewed is not None:
+        if not isinstance(last_reviewed, str) or not DATE_PATTERN.fullmatch(last_reviewed):
+            errors.append("'last_reviewed' must be an ISO date (YYYY-MM-DD) or null")
+
+    interval = record.get("review_interval_days")
+    if "review_interval_days" in record and (
+        not isinstance(interval, int) or isinstance(interval, bool) or interval < 1
+    ):
+        errors.append("'review_interval_days' must be a positive integer")
     return errors
 
 
@@ -170,12 +219,19 @@ def validate_schema_file(path: Path = SCHEMA_PATH) -> list[str]:
         return ["provenance.schema.json must contain a JSON object"]
     expected_required = {"authors", "method_status"}
     required = set(schema.get("required", []))
-    method_values = set(schema.get("properties", {}).get("method_status", {}).get("enum", []))
+    properties = schema.get("properties", {})
+    method_values = set(properties.get("method_status", {}).get("enum", []))
+    review_values = set(properties.get("review_status", {}).get("enum", []))
+    status_values = set(properties.get("status", {}).get("enum", []))
     errors: list[str] = []
     if required != expected_required:
         errors.append("provenance.schema.json must require exactly authors and method_status")
     if method_values != METHOD_STATUSES:
         errors.append("provenance.schema.json method_status enum does not match the validator")
+    if review_values != REVIEW_STATUSES:
+        errors.append("provenance.schema.json review_status enum does not match the validator")
+    if status_values != LIFECYCLE_STATUSES:
+        errors.append("provenance.schema.json status enum does not match the validator")
     return errors
 
 

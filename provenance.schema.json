@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Water-skills provenance record",
-  "description": "Evidence-linked metadata for one skill. It records authorship and method status; it is not a quality or validation score.",
+  "description": "Evidence-linked metadata for one skill. It records authorship, method status, review state, and catalog fields; it is not a quality or validation score.",
   "type": "object",
   "required": ["authors", "method_status"],
   "additionalProperties": false,
@@ -34,6 +34,42 @@
     "review_status": {
       "type": "string",
       "enum": ["not_reviewed", "under_review", "reviewed"]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": ["publish", "finish", "archive", "duplicate", "unknown"]
+    },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "supersedes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "superseded_by": {
+      "anyOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "null" }
+      ]
+    },
+    "last_reviewed": {
+      "anyOf": [
+        { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        { "type": "null" }
+      ]
+    },
+    "review_interval_days": {
+      "type": "integer",
+      "minimum": 1
     }
   },
   "allOf": [
