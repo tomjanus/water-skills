@@ -23,7 +23,7 @@ it there.
 | `expected_output` | Yes | Outcome description of a successful run. |
 | `expected_skill` | No | Skill that should load; `null` for negative cases. |
 | `files` | No | Fixture paths relative to `evals/files/`. |
-| `routing` | No | `{ "expect": [...], "forbid": [...] }`, graded on the transcript. |
+| `routing` | No | `{ "expect": [...], "forbid": [...] }`, checks text mentions in captured transcripts and outputs; not proof of runtime skill loading. |
 | `assertions` | No | Array of assertion strings (see below). |
 
 `id` must start with a letter or digit and contain only ASCII letters, digits,
@@ -36,7 +36,7 @@ earlier runs.
 |------|-----------|---------|
 | `file:<path>` | filesystem | `file:outputs/summary.json` |
 | `regex:<pattern>` | `re.search` on transcript + outputs | `regex:^name:\s*[a-z0-9-]+$` |
-| `json:<path>.<field>` | JSON load | `json:outputs/summary.json:nodes.0.id` |
+| `json:<path>:<field>` | JSON load; dot-separated object keys and zero-based array indexes | `json:outputs/summary.json:nodes.0.id` |
 | `script:<name>` | subprocess exit code | `script:check_frontmatter.py` |
 | `agentskills` | `agentskills validate` | `agentskills` |
 | *(bare sentence)* | optional LLM judge | `The description states when to use the skill.` |

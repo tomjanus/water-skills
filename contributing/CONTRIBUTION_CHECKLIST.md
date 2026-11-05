@@ -1,0 +1,12 @@
+- [ ] The change addresses one specific water-science or engineering problem.
+- [ ] Related skills/issues/PRs were searched; any overlap is explained.
+- [ ] The proposed skill has one focused task, directory-matched name, and routing description.
+- [ ] Domain-specific claims are linked to supplied or authoritative sources; assumptions and limits are explicit.
+- [ ] No authors, reviewers, tested versions, results, or provenance were invented.
+- [ ] Behavior-shaping changes include a relevant eval specification; docs-only changes are exempt.
+- [ ] `agentskills validate ./skills/<name>` passes for each changed skill.
+- [ ] `python evals/runner.py --validate` passes; behavioral runs and missing captures are reported accurately.
+- [ ] Relevant repository checks pass: layout, provenance, links, secrets, and unit tests.
+- [ ] The PR template is complete, including model/harness disclosure and any applicable eval evidence.
+- [ ] A human reviewed the complete diff; domain review is identified where scientific decisions are involved.
+- [ ] The PR targets `dev` and contains one related change.
