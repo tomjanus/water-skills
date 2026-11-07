@@ -66,6 +66,16 @@ bash .github/workflows/validate-skills.sh
 
 Disclose the model, agent harness, versions, and installed plugins used to prepare a contribution, or state that it was written by hand. A human must review the complete diff before submission. The contributor remains responsible for factual claims and must route scientific or engineering decisions to qualified domain reviewers.
 
+## Development workflow
+
+The internal workflow for preparing and submitting changes:
+
+1. **grill-with-docs** — gather and review documentation relevant to the proposed change.
+2. **to-spec** — write the change as a specification or skill draft.
+3. **to-tickets** — break the specification into actionable issues or tasks.
+4. **implement** — write code, documentation, or skill files.
+5. **code-review** — human review of the complete diff before submission.
+
 ## Releases
 
 Releases use one repository-wide semantic version and an annotated Git tag. The
